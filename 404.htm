@@ -1,0 +1,8 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+  const path = window.location.pathname;
+  const base = path.substring(0, path.lastIndexOf("/") + 1);
+  sessionStorage.redirect = location.href;
+  location.replace(base + "index.html");
+</script>

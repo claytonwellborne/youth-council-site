@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 08609a0bd940c1db41b482bf2ec495ed4062df80 Clayton Wellborne <wellborneclayton@gmail.com> 1754872936 -0500	commit (initial): init: youth council router starter
+08609a0bd940c1db41b482bf2ec495ed4062df80 08609a0bd940c1db41b482bf2ec495ed4062df80 Clayton Wellborne <wellborneclayton@gmail.com> 1754872937 -0500	Branch: renamed refs/heads/master to refs/heads/main
+08609a0bd940c1db41b482bf2ec495ed4062df80 08609a0bd940c1db41b482bf2ec495ed4062df80 Clayton Wellborne <wellborneclayton@gmail.com> 1754873200 -0500	Branch: renamed refs/heads/main to refs/heads/main
+08609a0bd940c1db41b482bf2ec495ed4062df80 08609a0bd940c1db41b482bf2ec495ed4062df80 Clayton Wellborne <wellborneclayton@gmail.com> 1754873210 -0500	Branch: renamed refs/heads/main to refs/heads/main
+08609a0bd940c1db41b482bf2ec495ed4062df80 08609a0bd940c1db41b482bf2ec495ed4062df80 Clayton Wellborne <wellborneclayton@gmail.com> 1754873240 -0500	Branch: renamed refs/heads/main to refs/heads/main
+08609a0bd940c1db41b482bf2ec495ed4062df80 ce4357f782dc050d7ccdf90f733fa268284dec34 Clayton Wellborne <wellborneclayton@gmail.com> 1754873248 -0500	commit: add SPA redirect for GitHub Pages
+ce4357f782dc050d7ccdf90f733fa268284dec34 606b7b3b5eef0cac642120dc4c47b7db57402da5 Clayton Wellborne <wellborneclayton@gmail.com> 1754873441 -0500	commit: chore: set base for GitHub Pages
+606b7b3b5eef0cac642120dc4c47b7db57402da5 938349cb3bad7da30d5db8357ffda1f830334af5 Clayton Wellborne <wellborneclayton@gmail.com> 1754873999 -0500	commit: chore: ignore build and deps
