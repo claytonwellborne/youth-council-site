@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
@@ -12,7 +12,7 @@ import Contact from './pages/Contact'
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
@@ -31,14 +31,14 @@ function App() {
           <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-gray-600 flex items-center justify-between flex-wrap gap-2">
             <span>© {new Date().getFullYear()} Youth Council</span>
             <nav className="flex gap-4">
-              <a href="/about" className="hover:text-gray-900">About</a>
-              <a href="/programs" className="hover:text-gray-900">Programs</a>
-              <a href="/apply" className="hover:text-gray-900">Apply</a>
+              <a href="#/about" className="hover:text-gray-900">About</a>
+              <a href="#/programs" className="hover:text-gray-900">Programs</a>
+              <a href="#/apply" className="hover:text-gray-900">Apply</a>
             </nav>
           </div>
         </footer>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
