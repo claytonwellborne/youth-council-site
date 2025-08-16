@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import './index.css'
+import AdminGuard from './components/AdminGuard'
 
 const Login = React.lazy(() => import('./pages/admin/Login'));
 const Dashboard = React.lazy(() => import('./pages/admin/Dashboard'));
@@ -26,8 +27,8 @@ function App() {
         <Route index element={<Home />} />
         {/* admin */}
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/applications" element={<Applications />} />
+        <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
+        <Route path="/admin/applications" element={<AdminGuard><Applications /></AdminGuard>} />
             {/* Landing */}
             <Route path="/" element={<Home />} />
             {/* keep /home as alias */}
