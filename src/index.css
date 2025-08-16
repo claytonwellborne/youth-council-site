@@ -5,3 +5,12 @@
 :root {
   --brand: #2563eb; /* blue-600 */
 }
+/* --- Project 18 responsive helpers --- */
+@media (max-width: 768px) {
+  /* Pillars grid: 6 → 2 columns on mobile */
+  .p18-grid6 { display: grid !important; grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 12px !important; }
+  /* Outcomes panels: 2 → 1 column on mobile */
+  .p18-panels { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+  /* Metrics: 3 → 1 column on mobile */
+  .p18-metrics { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+}
