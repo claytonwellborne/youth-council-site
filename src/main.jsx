@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-// CHANGE THIS LINE:
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
+import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -12,29 +12,36 @@ import Contact from './pages/Contact'
 
 function App() {
   return (
-    // CHANGE BrowserRouter -> HashRouter
     <HashRouter>
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/programs" element={<Programs />} />
-            <Route path="/chapters" element={<Chapters />} />
-            <Route path="/apply" element={<Apply />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<Navigate to="/about" replace />} />
-          </Routes>
+  {/* Home is the landing page */}
+  <Route path="/" element={<Home />} />
+
+  {/* keep /home as alias */}
+  <Route path="/home" element={<Navigate to="/" replace />} />
+
+  <Route path="/about" element={<About />} />
+  <Route path="/programs" element={<Programs />} />
+  <Route path="/chapters" element={<Chapters />} />
+  <Route path="/apply" element={<Apply />} />
+  <Route path="/contact" element={<Contact />} />
+
+  {/* everything else → Home */}
+  <Route path="*" element={<Navigate to="/" replace />} />
+</Routes>
+
         </main>
+
         <footer className="border-t">
           <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-gray-600 flex items-center justify-between flex-wrap gap-2">
-            <span>© {new Date().getFullYear()} Youth Council</span>
+            <span>© {new Date().getFullYear()} Project 18</span>
             <nav className="flex gap-4">
-              <a href="#/about" className="hover:text-gray-900">About</a>
-              <a href="#/programs" className="hover:text-gray-900">Programs</a>
-              <a href="#/apply" className="hover:text-gray-900">Apply</a>
+              <Link to="/about" className="hover:text-gray-900">About</Link>
+              <Link to="/programs" className="hover:text-gray-900">Programs</Link>
+              <Link to="/apply" className="hover:text-gray-900">Apply</Link>
             </nav>
           </div>
         </footer>
@@ -44,3 +51,5 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+
+

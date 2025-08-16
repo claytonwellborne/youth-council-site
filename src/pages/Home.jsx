@@ -1,28 +1,49 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-console.log("P18 Home render:", new Date().toISOString());
+console.log("P18 Home build:", new Date().toISOString());
 
-// ---- tiny reveal helper ----
+import React, { useEffect, useRef, useState } from "react";
+
+/**
+ * PROJECT 18 — HOME PAGE (Apple‑style)
+ * Drop this in your /pages/Home.jsx (or wherever you route "/").
+ * Styling: basic, clean classes + a few inline styles so it looks good without Tailwind.
+ * You can later swap to Tailwind/shadcn easily.
+ *
+ * What this includes:
+ * - Hero (headline + subline + CTAs)
+ * - Value Pillars grid
+ * - Outcomes (C) panels
+ * - Metrics (animated number counter)
+ * - Social proof strip (placeholders)
+ * - CTA band
+ * - Simple on‑scroll reveal animations (IntersectionObserver)
+ * - Lightweight CountUp component
+ */
+
+// ----------- Small utilities -----------
 function useReveal() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true);
-        io.disconnect();
-      }
-    }, { threshold: 0.18 });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.18 }
+    );
     io.observe(el);
     return () => io.disconnect();
   }, []);
   return { ref, visible };
 }
 
-function CountUp({ to = 100, duration = 1000 }) {
+function CountUp({ to = 100, duration = 1000, prefix = "", suffix = "" }) {
   const [val, setVal] = useState(0);
   useEffect(() => {
     const start = performance.now();
@@ -33,50 +54,50 @@ function CountUp({ to = 100, duration = 1000 }) {
     };
     requestAnimationFrame(tick);
   }, [to, duration]);
-  return <span>{val.toLocaleString()}</span>;
+  return (
+    <span>
+      {prefix}
+      {val.toLocaleString()}
+      {suffix}
+    </span>
+  );
 }
 
-// ---- sections ----
+// ----------- Sections -----------
 function Hero() {
   const { ref, visible } = useReveal();
   return (
     <section
       ref={ref}
-      className={visible ? "reveal-in" : "reveal-pre"}
       style={{
-        minHeight: "88vh",
+        minHeight: "90vh",
         display: "grid",
         placeItems: "center",
         padding: "6rem 1.25rem",
-        background:
-          "radial-gradient(1200px 600px at 80% -10%, rgba(255,0,0,0.12), transparent), linear-gradient(180deg, #fff, #f8f8f8)",
+        background: "radial-gradient(1200px 600px at 80% -10%, rgba(255,0,0,0.12), transparent), linear-gradient(180deg, #fff, #f8f8f8)",
       }}
+      className={"hero " + (visible ? "reveal-in" : "reveal-pre")}
     >
       <div style={{ maxWidth: 980, textAlign: "center" }}>
-        <h1
-          style={{
-            fontSize: "clamp(40px, 6vw, 72px)",
-            lineHeight: 1.06,
-            letterSpacing: -0.5,
-            margin: 0,
-            color: "#111",
-          }}
-        >
+        <h1 style={{
+          fontSize: "clamp(40px, 6vw, 72px)",
+          lineHeight: 1.06,
+          letterSpacing: -0.5,
+          margin: 0,
+          fontWeight: 800,
+        }}>
           One Voice. One Fight. One America.
         </h1>
-        <p
-          style={{
-            marginTop: 18,
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: "#444",
-          }}
-        >
-          Project 18 turns motivated students into credible leaders through real work,
-          mentorship, and measurable impact.
+        <p style={{
+          marginTop: 18,
+          fontSize: "clamp(16px, 2vw, 20px)",
+          color: "#444",
+        }}>
+          Project 18 turns motivated students into credible leaders through real work, mentorship, and measurable impact.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28 }}>
-          <Link to="/apply" style={primaryBtn}>Become An Ambassador</Link>
-          <Link to="/about" style={ghostBtn}>About Us</Link>
+          <a href="/apply" style={primaryBtn}>Become An Ambassador</a>
+          <a href="/about" style={ghostBtn}>About Us</a>
         </div>
       </div>
     </section>
@@ -96,8 +117,8 @@ function Pillars() {
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "64px 20px", background: "#fff" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-        <div style={sectionHead} className="p18-section-head">Our Values</div>
-        <div style={grid6} className="p18-grid6">
+        <div style={sectionHead}>Our Values</div>
+        <div style={grid6}>
           {pillars.map((p) => (
             <div key={p.title} style={tile}>
               <div style={tileTitle}>{p.title}</div>
@@ -121,8 +142,8 @@ function Outcomes() {
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "72px 20px", background: "#f7f7f7" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-        <div style={sectionHead} className="p18-section-head">What You Get</div>
-        <div style={panelWrap} className="p18-panels">
+        <div style={sectionHead}>What You Get</div>
+        <div style={panelWrap}>
           {outcomes.map((o) => (
             <div key={o.title} style={panel}>
               <div style={panelTitle}>{o.title}</div>
@@ -137,22 +158,48 @@ function Outcomes() {
 
 function Metrics() {
   const { ref, visible } = useReveal();
+  const target = {
+    members: 250, // TODO: replace with real number
+    chapters: 12, // TODO: replace with real number
+    hours: 10400, // TODO: replace with real number
+  };
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "60px 20px", background: "#fff" }}>
       <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-        <div style={sectionHead} className="p18-section-head">Project 18 in Numbers</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: 16 }} className="p18-metrics">
+        <div style={sectionHead}>Project 18 in Numbers</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: 16 }}>
           <div style={metricBox}>
-            <div style={metricNum}>{visible ? <CountUp to={250} duration={1200} /> : 0}</div>
+            <div style={metricNum}>{visible ? <CountUp to={target.members} duration={1200} /> : 0}</div>
             <div style={metricLabel}>Ambassadors</div>
           </div>
           <div style={metricBox}>
-            <div style={metricNum}>{visible ? <CountUp to={12} duration={1200} /> : 0}</div>
+            <div style={metricNum}>{visible ? <CountUp to={target.chapters} duration={1200} /> : 0}</div>
             <div style={metricLabel}>Chapters</div>
           </div>
           <div style={metricBox}>
-            <div style={metricNum}>{visible ? <CountUp to={10400} duration={1400} /> : 0}</div>
+            <div style={metricNum}>{visible ? <CountUp to={target.hours} duration={1400} /> : 0}</div>
             <div style={metricLabel}>Community Hours</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SocialProof() {
+  const { ref, visible } = useReveal();
+  return (
+    <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "56px 20px", background: "#fafafa", borderTop: "1px solid #eee", borderBottom: "1px solid #eee" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 2fr", gap: 24, alignItems: "center" }}>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Trusted by partners across education and civic life</div>
+            <div style={{ color: "#666", fontSize: 15 }}>Add school/org/official logos here as they confirm. Keep it tasteful and minimal.</div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} style={{ height: 48, background: "#fff", border: "1px solid #eee", borderRadius: 10 }} />
+            ))}
           </div>
         </div>
       </div>
@@ -168,7 +215,7 @@ function CTA() {
         <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", margin: 0 }}>Your America. Your Leadership. Start Now.</h2>
         <p style={{ marginTop: 12, color: "#555" }}>Apply in two minutes. We’ll follow up with next steps and a welcome call.</p>
         <div style={{ marginTop: 24 }}>
-          <Link to="/apply" style={primaryBtn}>Apply Now</Link>
+          <a href="/apply" style={primaryBtn}>Apply Now</a>
         </div>
       </div>
     </section>
@@ -182,12 +229,13 @@ export default function Home() {
       <Pillars />
       <Outcomes />
       <Metrics />
+      <SocialProof />
       <CTA />
     </main>
   );
 }
 
-// ---- style objects ----
+// ----------- Styles (inline-style objects for simplicity) -----------
 const primaryBtn = {
   background: "#e50914",
   color: "#fff",
@@ -197,6 +245,7 @@ const primaryBtn = {
   textDecoration: "none",
   display: "inline-block",
 };
+
 const ghostBtn = {
   background: "transparent",
   color: "#111",
@@ -206,19 +255,22 @@ const ghostBtn = {
   textDecoration: "none",
   border: "1px solid #ddd",
 };
+
 const sectionHead = {
   fontSize: 14,
   letterSpacing: ".2em",
   textTransform: "uppercase",
-  color: "#e50914",
+  color: "#999",
   marginBottom: 18,
   fontWeight: 700,
 };
+
 const grid6 = {
   display: "grid",
   gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
   gap: 16,
 };
+
 const tile = {
   background: "#fafafa",
   border: "1px solid #eee",
@@ -226,20 +278,24 @@ const tile = {
   padding: 18,
   minHeight: 120,
 };
+
 const tileTitle = {
-  color: "#111",
+  fontWeight: 800,
   fontSize: 18,
   marginBottom: 6,
 };
+
 const tileBlurb = {
   color: "#555",
   fontSize: 14,
 };
+
 const panelWrap = {
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
   gap: 18,
 };
+
 const panel = {
   background: "#fff",
   border: "1px solid #eee",
@@ -247,33 +303,37 @@ const panel = {
   padding: 24,
   minHeight: 140,
 };
+
 const panelTitle = {
-  color: "#111",
+  fontWeight: 800,
   fontSize: 22,
   marginBottom: 8,
 };
+
 const panelBlurb = {
   color: "#555",
   fontSize: 15,
 };
+
 const metricBox = {
   background: "#fafafa",
   border: "1px solid #eee",
   borderRadius: 16,
   padding: 18,
 };
+
 const metricNum = {
   fontWeight: 900,
   fontSize: 36,
   lineHeight: 1,
 };
+
 const metricLabel = {
   color: "#666",
   marginTop: 6,
 };
 
-// ---- reveal CSS note ----
-// Add to src/index.css if not present:
+// ----------- Minimal reveal animation helpers -----------
+// Add this to your global CSS (index.css):
 // .reveal-pre { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
-// .reveal-in  { opacity: 1; transform: translateY(0); }
-
+// .reveal-in { opacity: 1; transform: translateY(0); }
