@@ -18,6 +18,7 @@ function App() {
         <main className="flex-1">
           <Routes>
         <Route index element={<Home />} />
+        <Route index element={<Home />} />
         {/* admin */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
