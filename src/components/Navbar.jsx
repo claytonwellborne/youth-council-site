@@ -19,7 +19,7 @@ export default function Navbar() {
     (isActive ? "text-red-600" : "text-gray-900 hover:text-red-600");
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm">
+    <header className="absolute top-0 inset-x-0 z-50 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <Link to="/home" className="flex items-center gap-2 shrink-0">
           <img src={LOGO} alt="Project 18" className="h-8 w-auto" />
