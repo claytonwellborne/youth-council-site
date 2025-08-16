@@ -1,22 +1,28 @@
 import { supabase } from '../../lib/supabase';
 
+const REDIRECT = 'https://weareproject18.com/#/admin';
+
 export default function Login() {
   const signInWithEmail = async (e) => {
     e.preventDefault();
     const email = new FormData(e.currentTarget).get('email');
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      emailRedirectTo: window.location.origin + '/#/admin'
+      emailRedirectTo: REDIRECT
     });
-    if (error) alert(error.message); else alert('Magic link sent! Check your email.');
+    if (error) {
+      alert('Email sign-in error: ' + (error.message || JSON.stringify(error)));
+    } else {
+      alert('Magic link sent! Check your email.');
+    }
   };
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/#/admin' }
+      options: { redirectTo: REDIRECT }
     });
-    if (error) alert(error.message);
+    if (error) alert('Google sign-in error: ' + (error.message || JSON.stringify(error)));
   };
 
   return (
