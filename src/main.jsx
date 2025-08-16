@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+// CHANGE THIS LINE:
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
 import Navbar from './components/Navbar'
@@ -12,6 +13,7 @@ import Contact from './pages/Contact'
 
 function App() {
   return (
+    // CHANGE BrowserRouter -> HashRouter
     <HashRouter>
       <div className="min-h-screen flex flex-col">
         <Navbar />
