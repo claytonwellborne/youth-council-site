@@ -19,25 +19,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - name: Install deps
         run: npm ci
+
       - name: Build
         env:
           VITE_FORM_ENDPOINT: ${{ secrets.VITE_FORM_ENDPOINT }}
           VITE_NOTIFY_EMAIL:  ${{ secrets.VITE_NOTIFY_EMAIL }}
-        env:
-          VITE_FORM_ENDPOINT: ${{ secrets.VITE_FORM_ENDPOINT }}
-          VITE_NOTIFY_EMAIL: ${{ secrets.VITE_NOTIFY_EMAIL }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_ADMIN_ALLOWLIST: ${{ secrets.VITE_ADMIN_ALLOWLIST }}
         run: npm run build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
       - name: Deploy
         uses: actions/deploy-pages@v4
         id: deployment
