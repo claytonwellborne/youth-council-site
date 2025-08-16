@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 export default function Login() {
   const signInWithEmail = async (e) => {
@@ -8,10 +8,8 @@ export default function Login() {
       email,
       emailRedirectTo: window.location.origin + '/#/admin'
     });
-    if (error) alert(error.message);
-    else alert('Magic link sent!');
+    if (error) alert(error.message); else alert('Magic link sent!');
   };
-
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -19,7 +17,6 @@ export default function Login() {
     });
     if (error) alert(error.message);
   };
-
   return (
     <div style={{ maxWidth: 380, margin: '6rem auto', padding: 24 }}>
       <h1>Admin Sign In</h1>

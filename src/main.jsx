@@ -17,6 +17,10 @@ function App() {
         <Navbar />
         <main className="flex-1">
           <Routes>
+        {/* admin */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
+        <Route path="/admin/applications" element={<AdminGuard><Applications /></AdminGuard>} />
             {/* Landing */}
             <Route path="/" element={<Home />} />
             {/* keep /home as alias */}
