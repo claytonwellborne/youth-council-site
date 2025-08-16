@@ -27,6 +27,9 @@ jobs:
       - name: Install deps
         run: npm ci
       - name: Build
+        env:
+          VITE_FORM_ENDPOINT: ${{ secrets.VITE_FORM_ENDPOINT }}
+          VITE_NOTIFY_EMAIL: ${{ secrets.VITE_NOTIFY_EMAIL }}
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

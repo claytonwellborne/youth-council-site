@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || 'https://formspree.io/f/YOURENDPOINT' // change later
-const NOTIFY_EMAIL = import.meta.env.VITE_NOTIFY_EMAIL || 'you@example.com' // optional, used by Apps Script flow
+const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT
+const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL
 
 export default function AmbassadorForm(){
   const [status, setStatus] = useState('idle')
@@ -20,13 +20,17 @@ export default function AmbassadorForm(){
   const onSubmit = async e => {
     e.preventDefault()
     setStatus('loading'); setError('')
+
+    if (!FORM_ENDPOINT) { setStatus('error'); setError('Form endpoint missing.'); return }
+    if (!data.agree)    { setStatus('error'); setError('Please agree to be contacted.'); return }
+
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, form: 'ambassador', notify: NOTIFY_EMAIL })
       })
-      if (!res.ok) throw new Error('Failed to submit.')
+      if (!res.ok) throw new Error(`Submit failed (${res.status})`)
       setStatus('success')
     } catch (err) {
       setStatus('error'); setError(err.message || 'Something went wrong.')
