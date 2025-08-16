@@ -131,23 +131,10 @@ export default function Ambassador(){
           <p className="text-zinc-700 max-w-2xl mx-auto mb-5 reveal">
             Fill out the form below. We review weekly and follow up with next steps.
           </p>
-
-          {/* Replace the src URL with your real Google Form link when ready */}
-          <div className="card p-2 reveal">
-            <div className="relative" style={{paddingTop: "0"}}>
-              <iframe
-                title="Project 18 Ambassador Application"
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfPLACEHOLDER/viewform?embedded=true"
-                width="100%" height="900" frameBorder="0" marginHeight="0" marginWidth="0"
-              >Loading…</iframe>
-            </div>
-          </div>
-
-          <div className="mt-6 reveal">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfPLACEHOLDER/viewform" target="_blank" rel="noreferrer" className="btn btn-gradient">Open in a new tab</a>
-          </div>
+          <AmbassadorForm />
         </div>
       </section>
+
     </main>
   );
 }
