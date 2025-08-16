@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-// Use Vite's base so assets work on GitHub Pages
-const base = import.meta.env.BASE_URL; // e.g. "/youth-council-site/"
+const base = import.meta.env.BASE_URL;
 const LOGO = `${base}logos/Black-Logo-No-BG.png`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -14,12 +14,26 @@ export default function Navbar() {
     return () => { document.body.style.overflow = prev; };
   }, [open]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const linkClass = ({ isActive }) =>
-    "px-3 py-2 rounded-md text-sm font-medium transition-colors " +
-    (isActive ? "text-red-600" : "text-gray-900 hover:text-red-600");
+    "px-3 py-2 rounded-md text-sm font-semibold transition-colors " +
+    (isActive ? "text-brandRed" : "text-zinc-900 hover:text-brandBlue");
 
   return (
-    <header className="absolute top-0 inset-x-0 z-50 bg-transparent">
+    <header
+      className={
+        "fixed top-0 inset-x-0 z-50 transition-all " +
+        (scrolled
+          ? "bg-white/70 backdrop-blur-md shadow-sm"
+          : "bg-transparent")
+      }
+    >
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <Link to="/home" className="flex items-center gap-2 shrink-0">
           <img src={LOGO} alt="Project 18" className="h-8 w-auto" />
@@ -43,9 +57,9 @@ export default function Navbar() {
           aria-label="Toggle menu"
           aria-expanded={open}
         >
-          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-gray-900 transition-transform duration-200 " + (open ? "translate-y-0 rotate-45" : "-translate-y-[6px] rotate-0")}/>
-          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-gray-900 transition-opacity duration-200 " + (open ? "opacity-0" : "opacity-100")}/>
-          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-gray-900 transition-transform duration-200 " + (open ? "translate-y-0 -rotate-45" : "translate-y-[6px] rotate-0")}/>
+          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-zinc-900 transition-transform duration-200 " + (open ? "translate-y-0 rotate-45" : "-translate-y-[6px] rotate-0")}/>
+          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-zinc-900 transition-opacity duration-200 " + (open ? "opacity-0" : "opacity-100")}/>
+          <span className={"absolute left-1/2 w-6 h-0.5 -translate-x-1/2 bg-zinc-900 transition-transform duration-200 " + (open ? "translate-y-0 -rotate-45" : "translate-y-[6px] rotate-0")}/>
         </button>
       </div>
 
@@ -64,18 +78,18 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
+          <div className="px-5 py-4 flex items-center justify-between border-b border-zinc-100">
             <div className="flex items-center gap-2">
               <img src={LOGO} alt="" className="h-7 w-auto" />
               <span className="sr-only">Project 18</span>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-md border border-gray-200"
+              className="inline-flex items-center justify-center w-9 h-9 rounded-md border border-zinc-200"
               aria-label="Close menu"
             >
-              <span className="block w-5 h-0.5 bg-gray-900 rotate-45 -translate-y-0.5" />
-              <span className="block w-5 h-0.5 bg-gray-900 -rotate-45 translate-y-0.5 -mt-0.5" />
+              <span className="block w-5 h-0.5 bg-zinc-900 rotate-45 -translate-y-0.5" />
+              <span className="block w-5 h-0.5 bg-zinc-900 -rotate-45 translate-y-0.5 -mt-0.5" />
             </button>
           </div>
 
@@ -94,7 +108,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
                   "block text-2xl font-semibold " +
-                  (isActive ? "text-red-600" : "text-gray-900 hover:text-red-600")
+                  (isActive ? "text-brandRed" : "text-zinc-900 hover:text-brandBlue")
                 }
                 style={{ transition: "transform .25s ease, opacity .25s ease", transform: open ? "none" : "translateY(6px)", opacity: open ? 1 : 0, transitionDelay: open ? `${i * 50}ms` : "0ms" }}
               >
