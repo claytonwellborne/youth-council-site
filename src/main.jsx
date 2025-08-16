@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import './index.css'
-import AccessDenied from './pages/admin/AccessDenied'
 import AdminGuard from './components/AdminGuard'
 
 const Login = React.lazy(() => import('./pages/admin/Login'));
@@ -46,8 +45,7 @@ function App() {
             <Route path="/apply" element={<Navigate to="/ambassador" replace />} />
 
             {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-                  <Route path="/admin/access-denied" element={<AccessDenied />} />
+            <Route path="*" element={<Navigate to="/" replace />} />} />
       </Routes></React.Suspense>
         </main>
 
