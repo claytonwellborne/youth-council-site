@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project 18</title>
 
-    <!-- Favicons (GitHub Pages-safe; swap by system theme) -->
+    <!-- Favicons (light/dark) -->
     <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="%BASE_URL%favicon-black.png" />
     <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)"  href="%BASE_URL%favicon-white.png" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
 
-    <!-- Tailwind (CDN) so we don't rely on PostCSS during build -->
+    <!-- ✅ Tailwind via CDN (bypasses PostCSS/Tailwind build) -->
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <div id="root"></div>
-    <!-- IMPORTANT: point to source entry; Vite injects built assets on build -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
