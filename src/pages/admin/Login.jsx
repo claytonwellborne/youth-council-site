@@ -3,61 +3,48 @@ import { supabase } from '../../lib/supabase';
 
 const REDIRECT = 'https://weareproject18.com/#/admin';
 
+async function getIsAdmin() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return { session: null, isAdmin: false };
+  const { data } = await supabase.from('profiles').select('is_admin').eq('id', session.user.id).maybeSingle();
+  return { session, isAdmin: !!data?.is_admin };
+}
+
 export default function Login() {
-  const [mode, setMode] = useState('signin'); // signin | signup | reset
-  const [error, setError] = useState('');
+  const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
+  const [err, setErr] = useState('');
 
   useEffect(() => {
-    // if already logged in, go to admin
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) window.location.hash = '#/admin';
-    });
+    (async () => {
+      const { session, isAdmin } = await getIsAdmin();
+      if (session && isAdmin) window.location.replace(REDIRECT);
+      // if signed in but not admin: stay here; guard will show /admin/access-denied if they try /admin
+    })();
   }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErr('');
     const fd = new FormData(e.currentTarget);
     const email = fd.get('email');
     const password = fd.get('password');
 
     try {
-      if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: REDIRECT } });
-        if (error) throw error;
-        alert('Check your email to confirm your account.');
-      } else if (mode === 'signin') {
+      if (mode === 'signin') {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        window.location.href = REDIRECT;
-      } else if (mode === 'reset') {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: REDIRECT });
+        window.location.replace(REDIRECT);
+      } else {
+        const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        alert('Password reset email sent.');
+        alert('Account created. Ask an admin to give you access.');
       }
-    } catch (err) {
-      setError(err?.message || JSON.stringify(err));
+    } catch (e) {
+      setErr(e?.message || String(e));
     }
   };
 
-  const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: REDIRECT }
-    });
-    if (error) setError(error.message);
-  };
-
-  const linkGoogle = async () => {
-    // must already be signed in with email/password
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { setError('Sign in first to link Google.'); return; }
-    const { error } = await supabase.auth.linkIdentity({ provider: 'google' });
-    if (error) setError(error.message);
-    else alert('Google linked to your account.');
-  };
-
-  const box = { maxWidth: 420, margin: '6rem auto', padding: 24, border: '1px solid #eee', borderRadius: 16, boxShadow: '0 6px 24px rgba(0,0,0,.06)', background: '#fff' };
+  const box = { maxWidth: 420, margin: '6rem auto', padding: 24, border: '1px solid #eee', borderRadius: 16, boxShadow: '0 6px 24px rgba(0,0,0,.06)', background:'#fff' };
 
   return (
     <div style={box}>
@@ -67,27 +54,19 @@ export default function Login() {
       <div style={{display:'flex', gap:8, margin:'12px 0'}}>
         <button onClick={()=>setMode('signin')}  style={{padding:'6px 10px', borderRadius:8, border: mode==='signin'?'2px solid #000':'1px solid #ccc', background:'#fff'}}>Sign in</button>
         <button onClick={()=>setMode('signup')}  style={{padding:'6px 10px', borderRadius:8, border: mode==='signup'?'2px solid #000':'1px solid #ccc', background:'#fff'}}>Create account</button>
-        <button onClick={()=>setMode('reset')}   style={{padding:'6px 10px', borderRadius:8, border: mode==='reset'?'2px solid #000':'1px solid #ccc', background:'#fff'}}>Reset password</button>
       </div>
 
-      {error && <div style={{color:'#b00020', margin:'8px 0'}}>{error}</div>}
+      {err && <div style={{color:'#b00020', margin:'8px 0'}}>{err}</div>}
 
       <form onSubmit={onSubmit} style={{display:'grid', gap:10}}>
         <input name="email" type="email" placeholder="email" required style={{padding:10, borderRadius:8, border:'1px solid #ddd'}} />
-        {mode !== 'reset' && (
-          <input name="password" type="password" placeholder="password" required style={{padding:10, borderRadius:8, border:'1px solid #ddd'}} />
-        )}
+        <input name="password" type="password" placeholder="password" required style={{padding:10, borderRadius:8, border:'1px solid #ddd'}} />
         <button type="submit" style={{padding:10, borderRadius:8, border:'1px solid #111', background:'#111', color:'#fff'}}>
-          {mode==='signin' ? 'Sign in' : mode==='signup' ? 'Create account' : 'Send reset link'}
+          {mode==='signin' ? 'Sign in' : 'Create account'}
         </button>
       </form>
 
-      <div style={{display:'grid', gap:8, marginTop:16}}>
-        <button onClick={signInWithGoogle} style={{padding:10, borderRadius:8, border:'1px solid #ddd', background:'#fff'}}>Continue with Google</button>
-        <button onClick={linkGoogle} style={{padding:10, borderRadius:8, border:'1px solid #ddd', background:'#fff'}}>Link Google to current account</button>
-      </div>
-
-      <p style={{fontSize:12, color:'#888', marginTop:12}}>After login you’ll be redirected to the admin dashboard.</p>
+      <p style={{fontSize:12, color:'#888', marginTop:12}}>After login, admins go straight to the dashboard.</p>
     </div>
   );
 }

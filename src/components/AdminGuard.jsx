@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Navigate } from 'react-router-dom';
 
 export default function AdminGuard({ children }) {
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { setLoading(false); setIsAdmin(false); return; }
+      if (!session) { if (!cancelled) { setSession(null); setIsAdmin(false); setLoading(false); } return; }
 
       const { data, error } = await supabase
         .from('profiles')
@@ -17,13 +20,22 @@ export default function AdminGuard({ children }) {
         .eq('id', session.user.id)
         .maybeSingle();
 
-      if (error) console.error(error);
-      setIsAdmin(!!data?.is_admin);
-      setLoading(false);
+      if (!cancelled) {
+        setSession(session);
+        setIsAdmin(!!data?.is_admin && !error);
+        setLoading(false);
+      }
     })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s ?? null);
+      // do not redirect here; let render handle it
+    });
+    return () => { sub.subscription.unsubscribe(); cancelled = true; };
   }, []);
 
   if (loading) return null;
-  if (!isAdmin) return <Navigate to="/admin/login" replace />;
+  if (!session) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+  if (!isAdmin) return <Navigate to="/admin/access-denied" replace />;
   return children;
 }
