@@ -59,7 +59,7 @@ function Hero() {
             lineHeight: 1.06,
             letterSpacing: -0.5,
             margin: 0,
-            fontWeight: 800,
+            0 color: "#111",
           }}
         >
           One Voice. One Fight. One America.
@@ -210,7 +210,7 @@ const sectionHead = {
   fontSize: 14,
   letterSpacing: ".2em",
   textTransform: "uppercase",
-  color: "#999",
+  color: "#e50914",
   marginBottom: 18,
   fontWeight: 700,
 };
@@ -227,7 +227,7 @@ const tile = {
   minHeight: 120,
 };
 const tileTitle = {
-  fontWeight: 800,
+  0 color: "#111",
   fontSize: 18,
   marginBottom: 6,
 };
@@ -248,7 +248,7 @@ const panel = {
   minHeight: 140,
 };
 const panelTitle = {
-  fontWeight: 800,
+  0 color: "#111",
   fontSize: 22,
   marginBottom: 8,
 };

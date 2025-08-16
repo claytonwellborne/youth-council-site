@@ -4,19 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project 18</title>
+    <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
+    <link rel="apple-touch-icon" href="%BASE_URL%favicon.png" />
 
     <!-- Favicons (GitHub Pages-safe; swap by system theme) -->
-    <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="%BASE_URL%favicon-black.png" />
-    <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)"  href="%BASE_URL%favicon-white.png" />
-    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
+    
+    
+    
 
     <!-- Tailwind via CDN (so no PostCSS pipeline needed) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Our small custom CSS (static, not processed by Vite/PostCSS) -->
     <link rel="stylesheet" href="%BASE_URL%app.css" />
-  </head>
-  <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+  <style>
+    body{
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 35%, #f7faff 100%);
+      color:#111;
+    }
+  </style>
+  <body class="text-gray-900">
     <div id="root"></div>
     <!-- Vite entry: source file; build injects hashed assets -->
     <script type="module" src="/src/main.jsx"></script>

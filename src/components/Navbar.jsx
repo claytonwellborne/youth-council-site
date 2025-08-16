@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const base = import.meta.env.BASE_URL; // "/youth-council-site/"
-const LOGO_LIGHT = `${base}logos/Black-Logo-No-BG.png`;
-const LOGO_DARK  = `${base}logos/White-Logo-No-BG.png`;
+const LOGO = `${base}logos/Black-Logo-No-BG.png`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -22,8 +21,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <Link to="/home" className="flex items-center gap-2 shrink-0">
-          <img src={LOGO_LIGHT} alt="Project 18" className="h-8 w-auto block dark:hidden" />
-          <img src={LOGO_DARK}  alt="Project 18" className="h-8 w-auto hidden dark:block" />
+          <img src={LOGO} alt="Project 18" className="h-8 w-auto" />
           <span className="sr-only">Project 18</span>
         </Link>
 
@@ -67,7 +65,7 @@ export default function Navbar() {
         >
           <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
             <div className="flex items-center gap-2">
-              <img src={LOGO_LIGHT} alt="" className="h-7 w-auto" />
+              <img src={LOGO} alt="" className="h-7 w-auto" />
               <span className="sr-only">Project 18</span>
             </div>
             <button
