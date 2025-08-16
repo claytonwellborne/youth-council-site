@@ -26,8 +26,8 @@ function App() {
         <Route index element={<Home />} />
         {/* admin */}
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
-        <Route path="/admin/applications" element={<AdminGuard><Applications /></AdminGuard>} />
+        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin/applications" element={<Applications />} />
             {/* Landing */}
             <Route path="/" element={<Home />} />
             {/* keep /home as alias */}

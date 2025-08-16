@@ -46,6 +46,7 @@ export default function Navbar() {
             <NavLink to="/ambassador" className={linkClass}>Ambassador</NavLink>
             <NavLink to="/chapters" className={linkClass}>Chapters</NavLink>
             <NavLink to="/contact" className={linkClass}>Contact</NavLink>
+          
           </nav>
           <Link to="/ambassador" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
         </div>
