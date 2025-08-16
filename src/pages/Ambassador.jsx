@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import useReveal from "../hooks/useReveal";
+import AmbassadorForm from "../components/AmbassadorForm";
 
 export default function Ambassador(){
   useReveal();
