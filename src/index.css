@@ -24,13 +24,5 @@ html, body, #root {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
 }
 
-.navbar {
-  background: var(--nav-bg);
-  backdrop-filter: saturate(1.2) blur(12px);
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-}
+.navbar { background: var(--nav-bg); backdrop-filter: saturate(1.2) blur(12px); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
