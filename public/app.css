@@ -8,3 +8,4 @@
   .p18-panels{display:grid !important;grid-template-columns:1fr !important;gap:12px !important;}
   .p18-metrics{display:grid !important;grid-template-columns:1fr !important;gap:12px !important;}
 }
+.reveal-pre{opacity:1 !important; transform:none !important;}
