@@ -12,30 +12,28 @@ export default function AdminGuard({ children }) {
     let cancelled = false;
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { if (!cancelled) { setSession(null); setIsAdmin(false); setLoading(false); } return; }
+      if (cancelled) return;
+      setSession(session);
+      if (!session) { setLoading(false); return; }
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('is_admin')
         .eq('id', session.user.id)
         .maybeSingle();
 
       if (!cancelled) {
-        setSession(session);
-        setIsAdmin(!!data?.is_admin && !error);
+        setIsAdmin(!!data?.is_admin);
         setLoading(false);
       }
     })();
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s ?? null);
-      // do not redirect here; let render handle it
-    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s ?? null));
     return () => { sub.subscription.unsubscribe(); cancelled = true; };
   }, []);
 
   if (loading) return null;
   if (!session) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-  if (!isAdmin) return <Navigate to="/admin/access-denied" replace />;
+  if (!isAdmin) return <Navigate to="/admin/login?denied=1" replace />;
   return children;
 }
