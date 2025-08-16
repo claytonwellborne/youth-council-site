@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 // CHANGE THIS LINE:
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import About from './pages/About'
