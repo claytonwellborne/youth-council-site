@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-const base = import.meta.env.BASE_URL; // "/youth-council-site/"
+// Use Vite's base so assets work on GitHub Pages
+const base = import.meta.env.BASE_URL; // e.g. "/youth-council-site/"
 const LOGO = `${base}logos/Black-Logo-No-BG.png`;
 
 export default function Navbar() {

@@ -96,7 +96,7 @@ function Pillars() {
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "64px 20px", background: "#fff" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-        <div style={sectionHead}>Our Values</div>
+        <div style={sectionHead} className="p18-section-head">Our Values</div>
         <div style={grid6} className="p18-grid6">
           {pillars.map((p) => (
             <div key={p.title} style={tile}>
@@ -121,7 +121,7 @@ function Outcomes() {
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "72px 20px", background: "#f7f7f7" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-        <div style={sectionHead}>What You Get</div>
+        <div style={sectionHead} className="p18-section-head">What You Get</div>
         <div style={panelWrap} className="p18-panels">
           {outcomes.map((o) => (
             <div key={o.title} style={panel}>
@@ -140,7 +140,7 @@ function Metrics() {
   return (
     <section ref={ref} className={visible ? "reveal-in" : "reveal-pre"} style={{ padding: "60px 20px", background: "#fff" }}>
       <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-        <div style={sectionHead}>Project 18 in Numbers</div>
+        <div style={sectionHead} className="p18-section-head">Project 18 in Numbers</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: 16 }} className="p18-metrics">
           <div style={metricBox}>
             <div style={metricNum}>{visible ? <CountUp to={250} duration={1200} /> : 0}</div>
