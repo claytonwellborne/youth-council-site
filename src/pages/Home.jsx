@@ -1,3 +1,4 @@
+console.log("P18 Home render:", new Date().toISOString())
 export default function Home() {
   return (
     <section className="py-16">
