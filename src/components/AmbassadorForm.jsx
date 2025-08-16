@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT
-const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL
+const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || 'https://script.google.com/macros/s/AKfycby22XcGHbqJa95hySMdjptk7W48fFy8jqNeufaf_mc-P36oyUu_FomtqpuMN4LeS5VF/exec'
+const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL || 'wellborneclayton@gmail.com'
 
 export default function AmbassadorForm(){
   const [status, setStatus] = useState('idle')
