@@ -10,24 +10,15 @@
     <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)"  href="%BASE_URL%favicon-white.png" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
 
-    <!-- Tailwind (CDN) so we don't rely on PostCSS during build -->
+    <!-- Tailwind via CDN (so no PostCSS pipeline needed) -->
     <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Reveal animations */
-    .reveal-pre{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
-    .reveal-in{opacity:1;transform:translateY(0);}
 
-    /* Mobile helpers (override inline grids) */
-    @media (max-width:768px){
-      .p18-grid6{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:12px !important;}
-      .p18-panels{display:grid !important;grid-template-columns:1fr !important;gap:12px !important;}
-      .p18-metrics{display:grid !important;grid-template-columns:1fr !important;gap:12px !important;}
-    }
-  </style>
+    <!-- Our small custom CSS (static, not processed by Vite/PostCSS) -->
+    <link rel="stylesheet" href="%BASE_URL%app.css" />
   </head>
   <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <div id="root"></div>
-    <!-- IMPORTANT: point to source entry; Vite injects built assets on build -->
+    <!-- Vite entry: source file; build injects hashed assets -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
