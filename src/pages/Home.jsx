@@ -96,7 +96,7 @@ function Hero() {
           Project 18 turns motivated students into credible leaders through real work, mentorship, and measurable impact.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28 }}>
-          <a href="/apply" style={primaryBtn}>Become An Ambassador</a>
+          <a href="/ambassador" style={primaryBtn}>Become An Ambassador</a>
           <a href="/about" style={ghostBtn}>About Us</a>
         </div>
       </div>
@@ -215,7 +215,7 @@ function CTA() {
         <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", margin: 0 }}>Your America. Your Leadership. Start Now.</h2>
         <p style={{ marginTop: 12, color: "#555" }}>Apply in two minutes. We’ll follow up with next steps and a welcome call.</p>
         <div style={{ marginTop: 24 }}>
-          <a href="/apply" style={primaryBtn}>Apply Now</a>
+          <a href="/ambassador" style={primaryBtn}>Apply Now</a>
         </div>
       </div>
     </section>

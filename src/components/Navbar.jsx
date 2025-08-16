@@ -29,26 +29,26 @@ export default function Navbar() {
     <header
       className={
         "fixed top-0 inset-x-0 z-50 transition-all " +
-        (scrolled
-          ? "bg-white/70 backdrop-blur-md shadow-sm"
-          : "bg-transparent")
+        (scrolled ? "bg-white/70 backdrop-blur-md shadow-sm" : "bg-transparent")
       }
     >
-      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
         <Link to="/home" className="flex items-center gap-2 shrink-0">
           <img src={LOGO} alt="Project 18" className="h-8 w-auto" />
           <span className="sr-only">Project 18</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
-          <NavLink to="/home" className={linkClass}>Home</NavLink>
-          <NavLink to="/about" className={linkClass}>About</NavLink>
-          <NavLink to="/programs" className={linkClass}>Programs</NavLink>
-          <NavLink to="/chapters" className={linkClass}>Chapters</NavLink>
-          <NavLink to="/apply" className={linkClass}>Apply</NavLink>
-          <NavLink to="/contact" className={linkClass}>Contact</NavLink>
-        </nav>
+        <div className="hidden md:flex items-center gap-1">
+          <nav className="flex items-center gap-1">
+            <NavLink to="/home" className={linkClass}>Home</NavLink>
+            <NavLink to="/about" className={linkClass}>About</NavLink>
+            <NavLink to="/ambassador" className={linkClass}>Ambassador</NavLink>
+            <NavLink to="/chapters" className={linkClass}>Chapters</NavLink>
+            <NavLink to="/contact" className={linkClass}>Contact</NavLink>
+          </nav>
+          <Link to="/ambassador" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -63,7 +63,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Full-screen mobile menu */}
+      {/* Mobile menu */}
       <div className={"md:hidden fixed inset-0 z-50 " + (open ? "" : "pointer-events-none")}>
         <div
           className={"absolute inset-0 transition-opacity duration-200 " + (open ? "opacity-100" : "opacity-0")}
@@ -97,9 +97,8 @@ export default function Navbar() {
             {[
               { to: "/home", label: "Home" },
               { to: "/about", label: "About" },
-              { to: "/programs", label: "Programs" },
+              { to: "/ambassador", label: "Ambassador" },
               { to: "/chapters", label: "Chapters" },
-              { to: "/apply", label: "Apply" },
               { to: "/contact", label: "Contact" },
             ].map((item, i) => (
               <NavLink
@@ -115,6 +114,7 @@ export default function Navbar() {
                 {item.label}
               </NavLink>
             ))}
+            <Link to="/ambassador" onClick={() => setOpen(false)} className="btn btn-gradient inline-block mt-3">Apply</Link>
           </nav>
         </div>
       </div>

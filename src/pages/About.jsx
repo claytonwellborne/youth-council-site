@@ -35,7 +35,7 @@ export default function About(){
 
           <div className="mt-5 flex items-center justify-center gap-3 reveal">
             <Link to="/programs" className="btn btn-gradient">Explore Programs</Link>
-            <Link to="/apply" className="btn border border-zinc-200 rounded-xl font-semibold px-4 py-3">Start a Chapter</Link>
+            <Link to="/ambassador" className="btn border border-zinc-200 rounded-xl font-semibold px-4 py-3">Start a Chapter</Link>
           </div>
         </div>
       </section>
@@ -111,7 +111,7 @@ export default function About(){
           <p className="text-zinc-700 max-w-2xl mx-auto mb-5 reveal">
             Launch with our starter kit: outreach templates, event guides, and a simple first project you can run in under two months.
           </p>
-          <Link to="/apply" className="btn btn-gradient reveal">Apply to Start</Link>
+          <Link to="/ambassador" className="btn btn-gradient reveal">Apply to Start</Link>
         </div>
       </section>
     </main>
