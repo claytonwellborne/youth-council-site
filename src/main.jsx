@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import './index.css'
 
+const Login = React.lazy(() => import('./pages/admin/Login'));
+const Dashboard = React.lazy(() => import('./pages/admin/Dashboard'));
+const Applications = React.lazy(() => import('./pages/admin/Applications'));
+
+
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -16,7 +21,7 @@ function App() {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
-          <Routes>
+          <React.Suspense fallback={<div style={{padding:24}}>Loading…</div>}><Routes>
         <Route index element={<Home />} />
         <Route index element={<Home />} />
         {/* admin */}
@@ -40,7 +45,7 @@ function App() {
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          </Routes></React.Suspense>
         </main>
 
         <footer className="border-t">
