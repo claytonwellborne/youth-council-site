@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
 
 const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || 'https://script.google.com/macros/s/AKfycby22XcGHbqJa95hySMdjptk7W48fFy8jqNeufaf_mc-P36oyUu_FomtqpuMN4LeS5VF/exec'
-const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL || 'wellborneclayton@gmail.com'
+const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL  || 'wellborneclayton@gmail.com'
 
 export default function AmbassadorForm(){
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
   const [data, setData] = useState({
     name: '', email: '', school: '', city: '', state: '',
-    committee: 'Outreach & Chapters',
-    why: '', experience: '', agree: false
+    committee: 'Outreach & Chapters', why: '', experience: '', agree: false
   })
 
   const onChange = e => {
@@ -20,16 +19,22 @@ export default function AmbassadorForm(){
   const onSubmit = async e => {
     e.preventDefault()
     setStatus('loading'); setError('')
-
     if (!FORM_ENDPOINT) { setStatus('error'); setError('Form endpoint missing.'); return }
     if (!data.agree)    { setStatus('error'); setError('Please agree to be contacted.'); return }
+
+    // Build a "simple" body: application/x-www-form-urlencoded (no preflight)
+    const body = new URLSearchParams({
+      ...Object.fromEntries(Object.entries(data).map(([k,v]) => [k, String(v)])),
+      form: 'ambassador', notify: NOTIFY_EMAIL
+    }).toString()
 
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, form: 'ambassador', notify: NOTIFY_EMAIL })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body
       })
+      // Apps Script returns 200 JSON. Even if network is opaque, treat 200-ish as success.
       if (!res.ok) throw new Error(`Submit failed (${res.status})`)
       setStatus('success')
     } catch (err) {
