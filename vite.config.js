@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/youth-council-site/',
+  base: '/',   // ⬅️ important: was '/youth-council-site/'
 })
