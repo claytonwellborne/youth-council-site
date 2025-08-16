@@ -1,3 +1,4 @@
+export default { darkMode: 'media',
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
