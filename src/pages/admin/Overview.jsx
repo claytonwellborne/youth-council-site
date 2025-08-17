@@ -32,9 +32,9 @@ export default function Overview(){
   return (
     <div className="space-y-6">
       <div className="grid sm:grid-cols-3 gap-4">
-        <Stat label="Directory" href="/#/admin/directory" />
-        <Stat label="Applications" href="/#/admin/applications" />
-        <Stat label="Resources" href="/#/admin/resources" />
+        <Stat label="Directory" to="/admin/directory" />
+        <Stat label="Applications" to="/admin/applications" />
+        <Stat label="Resources" to="/admin/resources" />
       </div>
 
       {canPost && (

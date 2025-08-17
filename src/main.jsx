@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import './index.css'
 
 /* Public */
@@ -29,35 +29,37 @@ import Executive from './pages/admin/Executive'
 import PressCreation from './pages/admin/PressCreation'
 import ProfileSettings from './pages/admin/ProfileSettings'
 import AccountSettings from './pages/admin/AccountSettings'
-
 import { AdminProvider } from './components/admin/AdminContext'
+
+function PublicLayout(){
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
 
 function App() {
   return (
     <AdminProvider>
       <HashRouter>
         <Routes>
-          {/* Public site with navbar */}
-          <Route element={
-            <div className="min-h-screen flex flex-col">
-              <Navbar />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/home" element={<Navigate to="/" replace />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/ambassador" element={<Ambassador />} />
-                  <Route path="/contact" element={<Contact />} />
-                  {/* legacy redirects */}
-                  <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
-                  <Route path="/apply" element={<Navigate to="/ambassador#apply" replace />} />
-                  {/* press (public) */}
-                  <Route path="/press" element={<Press />} />
-                  <Route path="/press/:slug" element={<PressPost />} />
-                </Routes>
-              </main>
-            </div>
-          }>
+          {/* Public site */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/ambassador" element={<Ambassador />} />
+            <Route path="/contact" element={<Contact />} />
+            {/* legacy redirects */}
+            <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
+            <Route path="/apply" element={<Navigate to="/ambassador#apply" replace />} />
+            {/* press */}
+            <Route path="/press" element={<Press />} />
+            <Route path="/press/:slug" element={<PressPost />} />
           </Route>
 
           {/* Admin auth */}
