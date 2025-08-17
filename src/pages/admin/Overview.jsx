@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { useAdmin } from "../../components/admin/AdminContext";
 import RichEditor from "../../components/admin/RichEditor";
@@ -76,11 +77,12 @@ export default function Overview(){
     </div>
   );
 }
-function Stat({label, href}) {
+
+function Stat({label, to}) {
   return (
-    <a href={href} className="block border rounded-xl p-4 bg-white hover:shadow-sm">
+    <Link to={to} className="block border rounded-xl p-4 bg-white hover:shadow-sm">
       <div className="text-sm text-gray-600">{label}</div>
       <div className="text-2xl font-bold mt-1">Open</div>
-    </a>
+    </Link>
   );
 }
