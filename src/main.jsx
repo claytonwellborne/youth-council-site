@@ -15,7 +15,8 @@ import Contact from './pages/Contact';
 
 // Admin auth + shell
 import AdminGuard from './components/AdminGuard';
-import AdminLayout from './components/admin/AdminLayout';
+import AdminLayout
+import RoleGuard from './components/admin/RoleGuard' from './components/admin/AdminLayout';
 import Login from './pages/admin/Login';
 
 // Admin pages
@@ -23,7 +24,8 @@ import Overview from './pages/admin/Overview';
 import Directory from './pages/admin/Directory';
 import Releases from './pages/admin/Releases';
 import Applications from './pages/admin/Applications';
-import Resources from './pages/admin/Resources';
+import Resources from './pages/admin/Resources'
+import Executive from './pages/admin/Executive';
 
 function RoutesWithNavbar() {
   const loc = useLocation();
@@ -41,6 +43,7 @@ function RoutesWithNavbar() {
         <Route path="/programs" element={<Programs />} />
         <Route path="/chapters" element={<Chapters />} />
         <Route path="/apply" element={<Apply />} />
+        <Route path="/ambassador" element={<Apply />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Admin login is PUBLIC */}
@@ -56,10 +59,31 @@ function RoutesWithNavbar() {
           }
         >
           <Route index element={<Overview />} />
-          <Route path="directory" element={<Directory />} />
-          <Route path="releases" element={<Releases />} />
-          <Route path="applications" element={<Applications />} />
-          <Route path="resources" element={<Resources />} />
+          <Route path="directory" element={
+            <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
+              <Directory />
+            </RoleGuard>
+          } />
+          <Route path="releases" element={
+            <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','ambassador']} committee="policy">
+              <Releases />
+            </RoleGuard>
+          } />
+          <Route path="applications" element={
+            <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','regional_coordinator']}>
+              <Applications />
+            </RoleGuard>
+          } />
+          <Route path="resources" element={
+            <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
+              <Resources />
+            </RoleGuard>
+          } />
+          <Route path="executive" element={
+            <RoleGuard allow={['executive_director','chief_of_staff']}>
+              <Executive />
+            </RoleGuard>
+          } />
         </Route>
 
         {/* Fallback */}
