@@ -27,7 +27,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           <Item to="/admin/directory">Directory</Item>
           <Item to="/admin/applications">Ambassador Applications</Item>
           <Item to="/admin/resources">Resources</Item>
-          <Item to="/admin/press">Press Creation</Item>
+          <Item to="/admin/press/create">Press Creation</Item>
           <Item to="/admin/executive">Executive Home</Item>
 
           <button

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "/src/lib/supabase";
 import { Link } from "react-router-dom";
 
 const Status = ({s})=>{
@@ -17,8 +17,7 @@ export default function PressHub(){
       .from('press_posts')
       .select('id, title, status, slug, tags, scheduled_at, published_at, updated_at')
       .order('updated_at', { ascending:false });
-    if (!error) setRows(data||[]);
-    else alert(error.message);
+    if (!error) setRows(data||[]); else alert(error.message);
   };
   useEffect(()=>{ load() },[]);
 
@@ -32,9 +31,9 @@ export default function PressHub(){
     return x;
   },[rows,tab,q]);
 
-  const publish   = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id); if (error) alert(error.message); else load(); };
-  const unpublish = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id);  if (error) alert(error.message); else load(); };
-  const remove    = async (r)=>{ if(!confirm('Delete this post?')) return; const { error } = await supabase.from('press_posts').delete().eq('id', r.id); if (error) alert(error.message); else load(); };
+  const publish   = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id); if (error) return alert(error.message); load(); };
+  const unpublish = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id); if (error) return alert(error.message); load(); };
+  const remove    = async (r)=>{ if(!confirm('Delete this post?')) return; const { error } = await supabase.from('press_posts').delete().eq('id', r.id); if (error) return alert(error.message); load(); };
 
   return (
     <div className="space-y-6">
