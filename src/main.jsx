@@ -1,4 +1,5 @@
 import React from 'react';
+import Settings from './pages/admin/Settings';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './index.css';
@@ -98,7 +99,13 @@ function AppShell() {
               </RoleGuard>
             }
           />
-        </Route>
+        
+            <Route path="settings" element={
+              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
+                <Settings />
+              </RoleGuard>
+            } />
+          </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
