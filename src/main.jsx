@@ -138,12 +138,8 @@ function App() {
           </Route>
 
           {/* Fallback */}
-        <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
-        <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
-          <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} /><PressHub /></AdminGuard>} /><PressHub /></AdminGuard>} />
-  <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} /><PressEditor /></AdminGuard>} /><PressEditor /></AdminGuard>} />
 </Routes>
       </HashRouter>
     </AdminProvider>
