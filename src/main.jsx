@@ -105,6 +105,10 @@ function AppShell() {
                 <Settings />
               </RoleGuard>
             } />
+          
+            <Route path="settings" element={<Navigate to="settings/profile" replace />} />
+            <Route path="settings/profile" element={<RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}><ProfileSettings /></RoleGuard>} />
+            <Route path="settings/account" element={<RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}><AccountSettings /></RoleGuard>} />
           </Route>
 
         {/* Fallback */}

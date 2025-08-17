@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import RichEditor from "../../components/admin/RichEditor";
 
 export default function Resources(){
   const [rows, setRows] = useState([]);
@@ -28,7 +29,7 @@ export default function Resources(){
         <h3 className="font-semibold mb-3">Add / Edit Resource</h3>
         <form onSubmit={save} className="space-y-3">
           <input className="w-full border rounded px-3 py-2" placeholder="Title" value={form.title} onChange={e=>setForm(s=>({...s,title:e.target.value}))}/>
-          <textarea className="w-full border rounded px-3 py-2 h-64 font-mono" placeholder="Markdown content" value={form.content} onChange={e=>setForm(s=>({...s,content:e.target.value}))}/>
+          <RichEditor value={form.content} onChange={(html)=>setForm(s=>({...s,content:html}))}/>
           <input className="w-full border rounded px-3 py-2" placeholder="tags, comma,separated" value={form.tags} onChange={e=>setForm(s=>({...s,tags:e.target.value}))}/>
           <button className="btn btn-gradient">{form.id?'Update':'Publish'}</button>
         </form>
@@ -49,7 +50,7 @@ export default function Resources(){
                   <button className="border rounded px-2 py-1" onClick={()=>del(r.id)}>Delete</button>
                 </div>
               </div>
-              <pre className="mt-2 whitespace-pre-wrap text-sm bg-zinc-50 border rounded p-3">{r.content.slice(0,400)}{r.content.length>400?'…':''}</pre>
+              <div className="prose max-w-none mt-2" dangerouslySetInnerHTML={{ __html: r.content }} />
             </article>
           ))}
           {!rows.length && <div className="text-gray-600">No resources yet.</div>}
