@@ -18,19 +18,34 @@ export default function Applications(){
   const uid = session?.user?.id;
 
   const [rows,setRows] = useState(null);
-  const [tab,setTab] = useState("pending"); // pending | approved | rejected | all
+  const [reviewers, setReviewers] = useState({});
+  const [tab,setTab] = useState("pending");
   const [q,setQ] = useState("");
 
   const load = async ()=>{
+    // 1) applications
     const { data, error } = await supabase
       .from("applications")
-      .select(`
-        id, created_at, status, review_notes, reviewed_at, reviewed_by,
-        full_name, first_name, last_name, email, school, city, state, committee, why, experience,
-        reviewer:reviewed_by (full_name, email)
-      `)
+      .select("id, created_at, status, review_notes, reviewed_at, reviewed_by, full_name, email, school, city, state, committee, why, experience")
       .order("created_at", { ascending:false });
-    if (!error) setRows(data||[]);
+    if (error) { alert(error.message); return; }
+    setRows(data || []);
+
+    // 2) reviewers map
+    const ids = Array.from(new Set((data||[]).map(r=>r.reviewed_by).filter(Boolean)));
+    if (ids.length) {
+      const { data: profs, error: e2 } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", ids);
+      if (!e2) {
+        const map = {};
+        (profs||[]).forEach(p => { map[p.id] = { name: p.full_name, email: p.email }; });
+        setReviewers(map);
+      }
+    } else {
+      setReviewers({});
+    }
   };
 
   useEffect(()=>{ load() },[]);
@@ -42,8 +57,6 @@ export default function Applications(){
       const k = q.trim().toLowerCase();
       x = x.filter(r =>
         (r.full_name||"").toLowerCase().includes(k) ||
-        (r.first_name||"").toLowerCase().includes(k) ||
-        (r.last_name||"").toLowerCase().includes(k) ||
         (r.email||"").toLowerCase().includes(k)
       );
     }
@@ -59,7 +72,7 @@ export default function Applications(){
       .update({
         status: nextStatus,
         review_notes: notes,
-        reviewed_by: uid,      // trigger will also stamp if null
+        reviewed_by: uid,
         reviewed_at: new Date().toISOString()
       })
       .eq("id", row.id);
@@ -113,7 +126,6 @@ export default function Applications(){
         </div>
       </header>
 
-      {/* list */}
       <div className="space-y-4">
         {!rows && <div className="card p-6 animate-pulse h-24" />}
         {rows && filtered.length===0 && <div className="text-zinc-600">No applications.</div>}
@@ -122,7 +134,7 @@ export default function Applications(){
             <div className="flex flex-col md:flex-row md:items-start gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold">{r.full_name || [r.first_name,r.last_name].filter(Boolean).join(" ") || "—"}</h3>
+                  <h3 className="font-semibold">{r.full_name || "—"}</h3>
                   <StatusBadge s={r.status||"pending"} />
                 </div>
                 <div className="text-sm text-zinc-600 flex flex-wrap gap-3 mt-1">
@@ -132,26 +144,25 @@ export default function Applications(){
                   {r.committee && <span>• Committee: {r.committee}</span>}
                 </div>
 
-                {/* preview content */}
                 {r.why && (
                   <p className="mt-2 text-zinc-800">
                     {r.why.length > 240 ? r.why.slice(0,240) + "…" : r.why}
                   </p>
                 )}
 
-                {/* review meta */}
                 <div className="mt-2 text-xs text-zinc-600">
                   {r.reviewed_at && (
                     <span>
                       Last action {prettyDate(r.reviewed_at)}
-                      {r.reviewer?.full_name || r.reviewer?.email ? ` • by ${r.reviewer?.full_name || r.reviewer?.email}` : ""}
+                      {r.reviewed_by && (reviewers[r.reviewed_by]?.name || reviewers[r.reviewed_by]?.email)
+                        ? ` • by ${reviewers[r.reviewed_by]?.name || reviewers[r.reviewed_by]?.email}`
+                        : ""}
                       {r.review_notes ? ` • notes: "${r.review_notes}"` : ""}
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* actions */}
               <div className="flex md:flex-col gap-2 md:ml-4">
                 {(r.status||"pending") === "pending" && (
                   <>

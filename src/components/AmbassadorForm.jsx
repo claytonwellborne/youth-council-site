@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || 'https://script.google.com/macros/s/AKfycbzV0tUa7MSX5UrvSnqGu8qTkIAKP1AYKVD_TtDMObdvCXnCa_yb2KlDWciE7e_qx1aF/exec'
-const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL  || 'wellborneclayton@gmail.com'
-
 export default function AmbassadorForm(){
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
@@ -20,34 +17,23 @@ export default function AmbassadorForm(){
   const onSubmit = async e => {
     e.preventDefault()
     setStatus('loading'); setError('')
-    if (!FORM_ENDPOINT) { setStatus('error'); setError('Form endpoint missing.'); return }
-    if (!data.agree)    { setStatus('error'); setError('Please agree to be contacted.'); return }
+    if (!data.agree) { setStatus('error'); setError('Please agree to be contacted.'); return }
 
-    const fd = new FormData()
-    Object.entries(data).forEach(([k,v]) => fd.append(k, String(v)))
-    fd.append('form','ambassador'); fd.append('notify', NOTIFY_EMAIL)
-
-    try {
-      // 1) send to your Apps Script
-      await fetch(FORM_ENDPOINT, { method:'POST', mode:'no-cors', body: fd })
-
-      // 2) ALSO save to Supabase so Admin dashboard sees it
-      await supabase.from('applications').insert({
-        full_name: data.name,
-        email: data.email,
-        school: data.school,
-        city: data.city,
-        state: data.state,
-        committee: data.committee,
-        notes: `${data.why}${data.experience ? `\n\nExperience: ${data.experience}` : ''}`,
-        source: 'website',
-        status: 'reviewing'
-      })
-
-      setStatus('success')
-    } catch (err) {
-      setStatus('error'); setError(err.message || 'Network error.')
+    const payload = {
+      full_name: data.name,
+      email: data.email,
+      school: data.school,
+      city: data.city || null,
+      state: data.state || null,
+      committee: data.committee || null,
+      why: data.why || null,
+      experience: data.experience || null,
+      status: 'pending',
     }
+
+    const { error } = await supabase.from('applications').insert(payload)
+    if (error) { setStatus('error'); setError(error.message); return }
+    setStatus('success')
   }
 
   if (status==='success') {
