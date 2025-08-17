@@ -26,7 +26,6 @@ import Directory from './pages/admin/Directory'
 import Applications from './pages/admin/Applications'
 import Resources from './pages/admin/Resources'
 import Executive from './pages/admin/Executive'
-import PressCreation from './pages/admin/PressCreation'
 import ProfileSettings from './pages/admin/ProfileSettings'
 import AccountSettings from './pages/admin/AccountSettings'
 import { AdminProvider } from './components/admin/AdminContext'
@@ -138,7 +137,9 @@ function App() {
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
+  <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
+</Routes>
       </HashRouter>
     </AdminProvider>
   )
