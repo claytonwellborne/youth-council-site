@@ -5,31 +5,68 @@ import { useAdmin } from "../../components/admin/AdminContext";
 export default function ProfileSettings(){
   const { session } = useAdmin();
   const uid = session?.user?.id;
-  const [me, setMe] = useState({ email:'', full_name:'', location:'', bio:'', phone:'', avatar_url:'' });
+  const accountEmail = session?.user?.email || '';
+
+  const [me, setMe] = useState({
+    email: accountEmail, full_name:'', location:'', bio:'', phone:'', avatar_url:''
+  });
   const [saving, setSaving] = useState(false);
 
   useEffect(()=>{ (async ()=>{
-    if(!uid) return;
-    const { data } = await supabase.from('profiles')
+    if (!uid) return;
+    const { data, error } = await supabase
+      .from('profiles')
       .select('email,full_name,location,bio,phone,avatar_url')
-      .eq('id', uid).maybeSingle();
-    if (data) setMe(data);
-  })(); },[uid]);
+      .eq('id', uid)
+      .maybeSingle();
+
+    if (error) console.error('load profile error:', error);
+    if (data) {
+      setMe({
+        email: data.email || accountEmail,
+        full_name: data.full_name || '',
+        location: data.location || '',
+        bio: data.bio || '',
+        phone: data.phone || '',
+        avatar_url: data.avatar_url || ''
+      });
+    } else {
+      // no row yet — keep defaults; upsert will create it on Save
+      setMe((s)=>({ ...s, email: accountEmail }));
+    }
+  })(); }, [uid, accountEmail]);
 
   const upload = async (file) => {
-    if (!file) return;
-    const ext = file.name.split('.').pop(); const path = `${uid}.${ext}`;
-    await supabase.storage.from('avatars').upload(path, file, { upsert: true });
+    if (!file || !uid) return;
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const path = `${uid}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error: upErr } = await supabase.storage.from('avatars').upload(path, file);
+    if (upErr) { alert(upErr.message); return; }
     const { data } = supabase.storage.from('avatars').getPublicUrl(path);
     setMe(s => ({ ...s, avatar_url: data.publicUrl }));
   };
 
   const save = async (e)=>{
-    e.preventDefault(); setSaving(true);
-    await supabase.from('profiles').update({
-      full_name: me.full_name, location: me.location, bio: me.bio, phone: me.phone, avatar_url: me.avatar_url
-    }).eq('id', uid);
+    e.preventDefault();
+    if (!uid) return;
+
+    setSaving(true);
+    const payload = {
+      id: uid,
+      email: me.email || accountEmail,
+      full_name: (me.full_name || '').trim() || null,
+      location: (me.location || '').trim() || null,
+      bio: (me.bio || '').trim() || null,
+      phone: (me.phone || '').trim() || null,
+      avatar_url: me.avatar_url || null
+    };
+
+    const { error } = await supabase
+      .from('profiles')
+      .upsert(payload, { onConflict: 'id' });
+
     setSaving(false);
+    if (error) { alert(`Save failed: ${error.message}`); return; }
     alert('Saved.');
   };
 
@@ -44,12 +81,41 @@ export default function ProfileSettings(){
             <span className="btn border px-3 py-2 rounded-lg cursor-pointer">Upload avatar</span>
           </label>
         </div>
-        <input className="w-full border rounded-lg px-3 py-2" placeholder="Full name" value={me.full_name||''} onChange={e=>setMe(s=>({...s, full_name:e.target.value}))}/>
-        <input className="w-full border rounded-lg px-3 py-2" placeholder="Location (City, ST)" value={me.location||''} onChange={e=>setMe(s=>({...s, location:e.target.value}))}/>
-        <textarea className="w-full border rounded-lg px-3 py-2 h-28" placeholder="Bio" value={me.bio||''} onChange={e=>setMe(s=>({...s, bio:e.target.value}))}/>
-        <input className="w-full border rounded-lg px-3 py-2" placeholder="Phone" value={me.phone||''} onChange={e=>setMe(s=>({...s, phone:e.target.value}))}/>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Full name</label>
+            <input className="mt-1 w-full border rounded-lg px-3 py-2"
+                   value={me.full_name} onChange={e=>setMe(s=>({...s, full_name:e.target.value}))}/>
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Email (account)</label>
+            <input className="mt-1 w-full border rounded-lg px-3 py-2 bg-zinc-50"
+                   value={me.email} disabled />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Location</label>
+            <input className="mt-1 w-full border rounded-lg px-3 py-2"
+                   value={me.location} onChange={e=>setMe(s=>({...s, location:e.target.value}))}/>
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Phone</label>
+            <input className="mt-1 w-full border rounded-lg px-3 py-2"
+                   value={me.phone} onChange={e=>setMe(s=>({...s, phone:e.target.value}))}/>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Bio</label>
+          <textarea className="mt-1 w-full border rounded-lg px-3 py-2 h-28"
+                    value={me.bio} onChange={e=>setMe(s=>({...s, bio:e.target.value}))}/>
+        </div>
+
         <div className="flex items-center gap-3">
-          <button className="btn btn-gradient">{saving?'Saving…':'Save changes'}</button>
+          <button className="btn btn-gradient" disabled={saving}>{saving?'Saving…':'Save changes'}</button>
         </div>
       </form>
     </div>
