@@ -14,7 +14,7 @@ export default function Executive(){
   const load = async ()=>{
     const { data: p } = await supabase.from('staff_pending').select('*').order('created_at', { ascending:false });
     setPending(p||[]);
-    const { data: profs } = await supabase.from('profiles').select('email,role,committee,is_admin').order('email');
+    const { data: profs } = await supabase.rpc('list_team_profiles');
     setTeam((profs||[]).filter(r=>TEAM_ROLES.includes((r.role||'').toLowerCase())));
   };
 

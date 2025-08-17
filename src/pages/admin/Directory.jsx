@@ -5,8 +5,6 @@ import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { supabase } from "../../lib/supabase";
 
-const TEAM_ROLES = ['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator'];
-
 export default function Directory(){
   const [team, setTeam] = useState([]);
   const [amb, setAmb] = useState([]);
@@ -15,20 +13,26 @@ export default function Directory(){
   const load = async ()=>{
     setLoading(true);
 
-    // Team
-    const { data: profs } = await supabase.from('profiles').select('email,role,committee,is_admin').limit(2000);
-    const teamRows = (profs||[])
-      .filter(p => TEAM_ROLES.includes((p.role||'').toLowerCase()))
-      .map(p => ({ id:p.email, full_name:p.email?.split('@')[0] ?? 'Team', email:p.email, role:p.role, status:'staff' }));
+    // Team via RPC (bypasses RLS safely)
+    const { data: teamRows, error: tErr } = await supabase.rpc('list_team_profiles');
+    const teamList = (teamRows||[]).map(p => ({
+      id:p.email, full_name:p.email?.split('@')[0] ?? 'Team',
+      email:p.email, role:p.role, status:'staff'
+    }));
 
-    // Ambassadors (show all, tagged by status)
-    const { data: apps } = await supabase.from('applications').select('id,full_name,email,notes,created_at,status').order('created_at', { ascending:false }).limit(2000);
+    // Ambassadors (applications)
+    const { data: apps } = await supabase
+      .from('applications')
+      .select('id,full_name,email,notes,created_at,status')
+      .order('created_at', { ascending:false })
+      .limit(2000);
+
     const ambRows = (apps||[]).map(a => ({
       id:a.id, full_name:a.full_name || a.name || 'Unnamed', email:a.email||'',
       created_date:a.created_at, status:(a.status||'reviewing'), join_reason:a.notes||''
     }));
 
-    setTeam(teamRows);
+    setTeam(teamList);
     setAmb(ambRows);
     setLoading(false);
   };
