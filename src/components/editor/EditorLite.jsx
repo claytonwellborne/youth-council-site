@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../../lib/supabase";
 
 export default function EditorLite({ value="", onChange }) {
@@ -10,6 +10,30 @@ export default function EditorLite({ value="", onChange }) {
   const block = (tag) => { document.execCommand('formatBlock', false, tag);
     ref.current?.focus(); onChange?.(ref.current?.innerHTML || ""); };
   const onInput = () => onChange?.(ref.current?.innerHTML || "");
+
+  useEffect(()=>{
+    const el = ref.current; if(!el) return;
+    const setLTR = (node) => {
+      if (node.nodeType===1) {
+        node.setAttribute('dir','ltr');
+        node.style.direction='ltr';
+        node.style.unicodeBidi='plaintext';
+        node.style.textAlign='left';
+      }
+    };
+    // force on root + existing children
+    setLTR(el);
+    el.querySelectorAll('*').forEach(setLTR);
+
+    const mo = new MutationObserver(muts=>{
+      muts.forEach(m=>{
+        m.addedNodes.forEach(setLTR);
+      });
+    });
+    mo.observe(el,{childList:true, subtree:true});
+    return ()=> mo.disconnect();
+  },[]);
+
   const onPaste = () => setTimeout(onInput, 0);
 
   const upload = async (e) => {
@@ -21,7 +45,7 @@ export default function EditorLite({ value="", onChange }) {
     const url = pub?.publicUrl; if (!url) { e.target.value=""; return; }
     if (f.type.startsWith('image/')) exec('insertImage', url);
     else exec('insertHTML', `<a href="${url}" target="_blank" rel="noreferrer">${f.name}</a>`);
-    e.target.value = "";
+    e.target.value="";
   };
 
   return (
@@ -48,8 +72,9 @@ export default function EditorLite({ value="", onChange }) {
       </div>
       <div
         ref={ref}
+        dir="ltr"
         className="min-h-[320px] p-4 prose max-w-none focus:outline-none"
-        style={{direction:'ltr', unicodeBidi:'plaintext'}}
+        style={{direction:'ltr', unicodeBidi:'plaintext', textAlign:'left'}}
         contentEditable
         dangerouslySetInnerHTML={{__html: value}}
         onInput={onInput}

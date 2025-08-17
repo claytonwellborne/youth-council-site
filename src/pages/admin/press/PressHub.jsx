@@ -12,18 +12,18 @@ function MonthCalendar({items}) {
   const first = new Date(now.getFullYear(), now.getMonth(), 1);
   const startDay = first.getDay();
   const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  const scheduledByDay = {};
-  items.forEach(r=>{
+  const byDay = {};
+  (items||[]).forEach(r=>{
     if(!r.scheduled_at) return;
     const d = new Date(r.scheduled_at);
     if (d.getMonth()!==now.getMonth() || d.getFullYear()!==now.getFullYear()) return;
     const day = d.getDate();
-    scheduledByDay[day] = (scheduledByDay[day]||0)+1;
+    byDay[day] = (byDay[day]||0)+1;
   });
   const cells = [];
   for (let i=0;i<startDay;i++) cells.push(<div key={`e${i}`} />);
   for (let d=1; d<=daysInMonth; d++){
-    const n = scheduledByDay[d]||0;
+    const n = byDay[d]||0;
     cells.push(
       <div key={d} className="aspect-square rounded-lg border grid place-items-center text-sm relative">
         <span>{d}</span>
@@ -44,13 +44,13 @@ export default function PressHub(){
       .from('press_posts')
       .select('id, title, status, slug, tags, primary_tag, primary_tag_color, scheduled_at, published_at, updated_at, display_date')
       .order('updated_at', { ascending:false });
-    if (!error) setRows(data||[]); else alert(error.message);
+    if (!error) setRows(data||[]);
   };
   useEffect(()=>{ load() },[]);
 
   const counts = useMemo(()=>{
     const c = { all: (rows||[]).length, draft:0, scheduled:0, published:0, archived:0 };
-    (rows||[]).forEach(r=>{ if (c[r.status]!==undefined) c[r.status]++; });
+    (rows||[]).forEach(r=>{ if (c[r.status]!=null) c[r.status]++; });
     return c;
   },[rows]);
 
@@ -64,22 +64,9 @@ export default function PressHub(){
     return x;
   },[rows,tab,q]);
 
-  const publish = async (r)=>{
-    const { error } = await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
-  const unpublish = async (r)=>{
-    const { error } = await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
-  const remove = async (r)=>{
-    if(!confirm('Delete this post?')) return;
-    const { error } = await supabase.from('press_posts').delete().eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
+  const publish = async (r)=>{ await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id); load(); };
+  const unpublish = async (r)=>{ await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id); load(); };
+  const remove = async (r)=>{ if(!confirm('Delete this post?')) return; await supabase.from('press_posts').delete().eq('id', r.id); load(); };
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
@@ -100,7 +87,6 @@ export default function PressHub(){
       </header>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {/* list */}
         <div className="md:col-span-2 card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-zinc-50">
@@ -133,11 +119,9 @@ export default function PressHub(){
                     <td className="p-3">
                       <div className="flex justify-end gap-2">
                         <Link to={`/admin/press/create?id=${r.id}`} className="px-2 py-1 border rounded">Edit</Link>
-                        {r.status!=='published' ? (
-                          <button onClick={()=>publish(r)} className="px-2 py-1 border rounded">Publish</button>
-                        ) : (
-                          <button onClick={()=>unpublish(r)} className="px-2 py-1 border rounded">Unpublish</button>
-                        )}
+                        {r.status!=='published'
+                          ? <button onClick={()=>publish(r)} className="px-2 py-1 border rounded">Publish</button>
+                          : <button onClick={()=>unpublish(r)} className="px-2 py-1 border rounded">Unpublish</button>}
                         <button onClick={()=>remove(r)} className="px-2 py-1 border rounded text-red-600">Delete</button>
                       </div>
                     </td>
@@ -148,16 +132,10 @@ export default function PressHub(){
           </table>
         </div>
 
-        {/* calendar */}
         <aside className="space-y-3">
           <div className="card p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Scheduled (this month)</h3>
-            </div>
+            <h3 className="font-semibold mb-2">Scheduled (this month)</h3>
             <MonthCalendar items={rows||[]} />
-            <div className="mt-3 text-xs text-zinc-600">
-              Days with a blue badge have scheduled posts.
-            </div>
           </div>
         </aside>
       </div>
