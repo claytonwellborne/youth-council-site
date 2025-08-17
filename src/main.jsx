@@ -11,7 +11,7 @@ import About from './pages/About';
 import Programs from './pages/Programs';
 import Chapters from './pages/Chapters';
 import Apply from './pages/Apply';
-import Ambassador from './pages/Ambassador';
+
 import Contact from './pages/Contact';
 
 // Admin
@@ -43,8 +43,8 @@ function RoutesWithNavbar() {
         <Route path="/about" element={<About />} />
         <Route path="/programs" element={<Programs />} />
         <Route path="/chapters" element={<Chapters />} />
-        <Route path="/apply" element={<Ambassador />} />
-        <Route path="/ambassador" element={<Ambassador />} />
+        <Route path="/apply" element={<Apply />} />
+        <Route path="/ambassador" element={<Apply />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Admin login is PUBLIC */}
