@@ -1,4 +1,6 @@
 import React from 'react'
+import PressHub from './pages/admin/press/PressHub';
+import PressEditor from './pages/admin/press/PressEditor';
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import './index.css'
