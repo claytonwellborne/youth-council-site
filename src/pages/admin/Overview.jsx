@@ -1,44 +1,40 @@
 import { useEffect, useState } from "react";
-import { Users, UserCheck, Clock } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { Member } from "../../entities/Member";
-import { Announcement } from "../../entities/Announcement";
 import { useAdmin } from "../../components/admin/AdminContext";
+import { supabase } from "../../lib/supabase";
 import { Link } from "react-router-dom";
 
+const TEAM_ROLES = ['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator'];
+
 export default function Overview(){
-  const [stats, setStats] = useState({ total:0, active:0, pending:0 });
-  const [ann, setAnn] = useState([]);
   const { profile } = useAdmin();
-  const role = (profile?.role || 'ambassador').toLowerCase();
-  const isExec = ['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr'].includes(role) || (profile?.is_admin ?? false);
+  const [stats, setStats] = useState({ team:0, ambassadors:0, pending:0 });
 
   useEffect(()=>{ (async ()=>{
-    const m = await Member.list('-created_date');
-    setStats({ total:m.length, active:m.filter(x=>x.status==='active').length, pending:m.filter(x=>x.status==='pending').length });
-    setAnn(await Announcement.list());
+    // ambassadors
+    const { data: apps } = await supabase.from('applications').select('id,status').limit(2000);
+    const accepted = (apps||[]).filter(a=>a.status==='accepted').length;
+    const pending = (apps||[]).filter(a=>!a.status || a.status==='reviewing').length;
+
+    // team (exec/vps/rc)
+    let teamCount = 0;
+    const { data: profs, error } = await supabase.from('profiles').select('role').limit(2000);
+    if (!error && profs) teamCount = profs.filter(p=>TEAM_ROLES.includes((p.role||'').toLowerCase())).length;
+
+    setStats({ team: teamCount, ambassadors: accepted, pending });
   })(); },[]);
 
-  const publish = async (e)=>{
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const title = fd.get('title'); const body = fd.get('body');
-    await Announcement.create({ title, body });
-    e.currentTarget.reset();
-    setAnn(await Announcement.list());
-  };
-
   const tiles = [
-    { label:'Total Members', value:stats.total, ring:'bg-blue-100', icon:'👥' },
-    { label:'Active Members', value:stats.active, ring:'bg-green-100', icon:'✅' },
+    { label:'Team (Exec/VP/RC)', value:stats.team, ring:'bg-purple-100', icon:'🛡️' },
+    { label:'Active Ambassadors', value:stats.ambassadors, ring:'bg-green-100', icon:'🧑‍🤝‍🧑' },
     { label:'Pending Applications', value:stats.pending, ring:'bg-yellow-100', icon:'⏳' },
   ];
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-      <p className="text-gray-600 mb-6">Quick overview</p>
+      <p className="text-gray-600 mb-6">Welcome{profile?.email ? `, ${profile.email}` : ''}.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {tiles.map(t=>(
@@ -56,36 +52,9 @@ export default function Overview(){
         ))}
       </div>
 
-      <div className="mt-8"><Link to="/admin/directory"><Button>Open Member Management</Button></Link></div>
-
-      {/* Announcements */}
-      <div className="mt-10 grid md:grid-cols-2 gap-8">
-        {isExec && (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="font-semibold mb-3">Post an announcement</h3>
-              <form onSubmit={publish} className="space-y-3">
-                <input name="title" required placeholder="Title" className="w-full border rounded-md px-3 py-2" />
-                <textarea name="body" required placeholder="Write your announcement..." className="w-full border rounded-md px-3 py-2 h-28" />
-                <Button type="submit">Publish</Button>
-              </form>
-            </CardContent>
-          </Card>
-        )}
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="font-semibold mb-3">Announcements</h3>
-            <div className="space-y-4">
-              {ann.length ? ann.map(a=>(
-                <div key={a.id} className="border rounded-lg p-3 bg-white">
-                  <div className="font-semibold">{a.title}</div>
-                  <div className="text-sm text-gray-600">{new Date(a.created_at).toLocaleString()}</div>
-                  <p className="mt-2">{a.body}</p>
-                </div>
-              )) : <div className="text-gray-600">No announcements yet.</div>}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="mt-8 flex gap-3">
+        <Link to="/admin/directory"><Button>Open Member Management</Button></Link>
+        <Link to="/admin/applications"><Button variant="outline">View Applications</Button></Link>
       </div>
     </div>
   );
