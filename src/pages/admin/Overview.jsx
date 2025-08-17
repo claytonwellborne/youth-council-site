@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { useAdmin } from "../../components/admin/AdminContext";
 import { supabase } from "../../lib/supabase";
 import { Link } from "react-router-dom";
 
 const TEAM_ROLES = ['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator'];
 
 export default function Overview(){
-  const { profile } = useAdmin();
   const [stats, setStats] = useState({ team:0, ambassadors:0, pending:0 });
 
   useEffect(()=>{ (async ()=>{
-    // ambassadors
-    const { data: apps } = await supabase.from('applications').select('id,status').limit(2000);
-    const accepted = (apps||[]).filter(a=>a.status==='accepted').length;
-    const pending = (apps||[]).filter(a=>!a.status || a.status==='reviewing').length;
+    // applications
+    const { data: apps } = await supabase.from('applications').select('status').limit(2000);
+    const all = apps||[];
+    const ambassadors = all.filter(a => (a.status||'').toLowerCase()==='accepted' || (a.status||'').toLowerCase()==='active').length;
+    const pending = all.filter(a => !(a.status) || (a.status||'').toLowerCase()==='reviewing').length;
 
-    // team (exec/vps/rc)
-    let teamCount = 0;
-    const { data: profs, error } = await supabase.from('profiles').select('role').limit(2000);
-    if (!error && profs) teamCount = profs.filter(p=>TEAM_ROLES.includes((p.role||'').toLowerCase())).length;
+    // team (only columns we know exist)
+    let team = 0;
+    const { data: profs } = await supabase.from('profiles').select('role').limit(2000);
+    team = (profs||[]).filter(p => TEAM_ROLES.includes((p.role||'').toLowerCase())).length;
 
-    setStats({ team: teamCount, ambassadors: accepted, pending });
+    setStats({ team, ambassadors, pending });
   })(); },[]);
 
   const tiles = [
@@ -34,7 +33,7 @@ export default function Overview(){
   return (
     <div>
       <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-      <p className="text-gray-600 mb-6">Welcome{profile?.email ? `, ${profile.email}` : ''}.</p>
+      <p className="text-gray-600 mb-6">Quick overview</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {tiles.map(t=>(

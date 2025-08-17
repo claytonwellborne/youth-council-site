@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Users, Mail, Phone, Calendar, Shield } from "lucide-react";
+import { Users, Mail, Calendar, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
@@ -15,20 +15,18 @@ export default function Directory(){
   const load = async ()=>{
     setLoading(true);
 
-    // team
-    const { data: profs } = await supabase.from('profiles').select('email,role,committee,created_at').limit(2000);
+    // Team
+    const { data: profs } = await supabase.from('profiles').select('email,role,committee,is_admin').limit(2000);
     const teamRows = (profs||[])
       .filter(p => TEAM_ROLES.includes((p.role||'').toLowerCase()))
-      .map(p => ({ id:p.email, full_name:p.email?.split('@')[0] ?? 'Team', email:p.email, role:p.role, created_date:p.created_at, status:'staff' }));
+      .map(p => ({ id:p.email, full_name:p.email?.split('@')[0] ?? 'Team', email:p.email, role:p.role, status:'staff' }));
 
-    // ambassadors (accepted)
-    const { data: apps } = await supabase.from('applications').select('*').order('created_at', { ascending:false }).limit(2000);
-    const ambRows = (apps||[])
-      .filter(a=>a.status==='accepted')
-      .map(a => ({
-        id:a.id, full_name:a.full_name || a.name || 'Unnamed', email:a.email||'', phone:a.phone||'',
-        created_date:a.created_at, status:'active', join_reason:a.notes||''
-      }));
+    // Ambassadors (show all, tagged by status)
+    const { data: apps } = await supabase.from('applications').select('id,full_name,email,notes,created_at,status').order('created_at', { ascending:false }).limit(2000);
+    const ambRows = (apps||[]).map(a => ({
+      id:a.id, full_name:a.full_name || a.name || 'Unnamed', email:a.email||'',
+      created_date:a.created_at, status:(a.status||'reviewing'), join_reason:a.notes||''
+    }));
 
     setTeam(teamRows);
     setAmb(ambRows);
@@ -37,8 +35,13 @@ export default function Directory(){
 
   useEffect(()=>{ load() },[]);
 
-  const update = async (id, status)=>{ const map={active:'accepted', inactive:'rejected'}; await supabase.from('applications').update({ status: map[status]||status }).eq('id', id); load(); };
-  const statusCls = s => s==='active'?'bg-green-100 text-green-800': s==='pending'?'bg-yellow-100 text-yellow-800': s==='staff'?'bg-purple-100 text-purple-800':'bg-gray-100 text-gray-800';
+  const statusCls = s => {
+    const x=(s||'').toLowerCase();
+    if (x==='active'||x==='accepted') return 'bg-green-100 text-green-800';
+    if (x==='reviewing'||x==='pending') return 'bg-yellow-100 text-yellow-800';
+    if (x==='staff') return 'bg-purple-100 text-purple-800';
+    return 'bg-gray-100 text-gray-800';
+  };
 
   return (
     <div>
@@ -80,17 +83,13 @@ export default function Directory(){
                     </div>
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                       {m.email && <div className="flex items-center gap-1"><Mail className="w-4 h-4"/>{m.email}</div>}
-                      {m.phone && <div className="flex items-center gap-1"><Phone className="w-4 h-4"/>{m.phone}</div>}
-                      <div className="flex items-center gap-1"><Calendar className="w-4 h-4"/>Joined: {new Date(m.created_date).toLocaleDateString()}</div>
+                      {m.created_date && <div className="flex items-center gap-1"><Calendar className="w-4 h-4"/>Submitted: {new Date(m.created_date).toLocaleDateString()}</div>}
                     </div>
                     {m.join_reason && <p className="text-sm text-gray-700 italic">"{m.join_reason.slice(0,150)}{m.join_reason.length>150?'…':''}"</p>}
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={()=>update(m.id,'inactive')}>Deactivate</Button>
-                  </div>
                 </div>
               </div>
-            )) : <div className="text-gray-600">No ambassadors yet.</div>}
+            )) : <div className="text-gray-600">No applications yet.</div>}
           </div>
         </CardContent>
       </Card>
