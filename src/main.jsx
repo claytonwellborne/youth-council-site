@@ -103,7 +103,7 @@ function App() {
               path="press"
               element={
                 <RoleGuard allow={['executive_director','chief_of_staff','vp_pr']}>
-                  <PressCreation />
+                  <PressEditor />
                 </RoleGuard>
               }
             />
