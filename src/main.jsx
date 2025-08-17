@@ -1,129 +1,145 @@
-import React from 'react';
-import Settings from './pages/admin/Settings';
-import ReactDOM from 'react-dom/client';
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import './index.css'
 
-import Navbar from './components/Navbar';
-
-// Public pages
-import Home from './pages/Home';
-import About from './pages/About';
-import Chapters from './pages/Chapters';
+/* Public */
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import About from './pages/About'
+import Ambassador from './pages/Ambassador'
 import Contact from './pages/Contact'
-import PressRouter from './pages/press/routes';
-import Ambassador from './pages/Ambassador';
 
-// Admin shell
-import AdminGuard from './components/AdminGuard';
-import AdminLayout from './components/admin/AdminLayout';
-import RoleGuard from './components/admin/RoleGuard';
-import Login from './pages/admin/Login';
+/* Press (public) */
+import Press from './pages/press/Press'
+import PressPost from './pages/press/PressPost'
 
-// Admin pages
-import Overview from './pages/admin/Overview';
-import Directory from './pages/admin/Directory';
-import Releases from './pages/admin/Releases';
-import Applications from './pages/admin/Applications';
-import Resources from './pages/admin/Resources';
-import Executive from './pages/admin/Executive';
+/* Admin guards + layout */
+import AdminGuard from './components/AdminGuard'
+import RoleGuard from './components/admin/RoleGuard'
+import AdminLayout from './components/admin/AdminLayout'
 
-function AppShell() {
-  const loc = useLocation();
-  const isAdmin = loc.pathname.startsWith('/admin');
-  return (
-    <>
-      {!isAdmin && <Navbar />}
+/* Admin pages */
+import Login from './pages/admin/Login'
+import Overview from './pages/admin/Overview'
+import Directory from './pages/admin/Directory'
+import Applications from './pages/admin/Applications'
+import Resources from './pages/admin/Resources'
+import Executive from './pages/admin/Executive'
+import PressCreation from './pages/admin/PressCreation'
+import ProfileSettings from './pages/admin/ProfileSettings'
+import AccountSettings from './pages/admin/AccountSettings'
 
-      <Routes>
-        {/* Public */}
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Navigate to="/" replace />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/ambassador" element={<Ambassador />} />
-        <Route path="/chapters" element={<Chapters />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
-        <Route path="/apply" element={<Navigate to="/ambassador" replace />} />
-
-        {/* Admin login is public */}
-        <Route path="/admin/login" element={<Login />} />
-
-        {/* Admin area (guarded) */}
-        <Route
-          path="/admin/*"
-          element={
-            <AdminGuard>
-              <AdminLayout />
-            </AdminGuard>
-          }
-        >
-          <Route index element={<Overview />} />
-          <Route
-            path="directory"
-            element={
-              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
-                <Directory />
-              </RoleGuard>
-            }
-          />
-          <Route
-            path="releases"
-            element={
-              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','ambassador']} committee="policy">
-                <Releases />
-              </RoleGuard>
-            }
-          />
-          <Route
-            path="applications"
-            element={
-              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','regional_coordinator']}>
-                <Applications />
-              </RoleGuard>
-            }
-          />
-          <Route
-            path="resources"
-            element={
-              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
-                <Resources />
-              </RoleGuard>
-            }
-          />
-          <Route
-            path="executive"
-            element={
-              <RoleGuard allow={['executive_director','chief_of_staff']}>
-                <Executive />
-              </RoleGuard>
-            }
-          />
-        
-            <Route path="settings" element={
-              <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
-                <Settings />
-              </RoleGuard>
-            } />
-          
-            <Route path="settings" element={<Navigate to="settings/profile" replace />} />
-            <Route path="settings/profile" element={<RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}><ProfileSettings /></RoleGuard>} />
-            <Route path="settings/account" element={<RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}><AccountSettings /></RoleGuard>} />
-          </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
-  );
-}
+import { AdminProvider } from './components/admin/AdminContext'
 
 function App() {
   return (
-    <HashRouter>
-      <AppShell />
-    </HashRouter>
-  );
+    <AdminProvider>
+      <HashRouter>
+        <Routes>
+          {/* Public site with navbar */}
+          <Route element={
+            <div className="min-h-screen flex flex-col">
+              <Navbar />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/home" element={<Navigate to="/" replace />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/ambassador" element={<Ambassador />} />
+                  <Route path="/contact" element={<Contact />} />
+                  {/* legacy redirects */}
+                  <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
+                  <Route path="/apply" element={<Navigate to="/ambassador#apply" replace />} />
+                  {/* press (public) */}
+                  <Route path="/press" element={<Press />} />
+                  <Route path="/press/:slug" element={<PressPost />} />
+                </Routes>
+              </main>
+            </div>
+          }>
+          </Route>
+
+          {/* Admin auth */}
+          <Route path="/admin/login" element={<Login />} />
+
+          {/* Admin app (no public navbar) */}
+          <Route
+            path="/admin"
+            element={
+              <AdminGuard>
+                <AdminLayout />
+              </AdminGuard>
+            }
+          >
+            <Route index element={<Overview />} />
+            <Route
+              path="directory"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
+                  <Directory />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="applications"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','regional_coordinator']}>
+                  <Applications />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="resources"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
+                  <Resources />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="press"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_pr']}>
+                  <PressCreation />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="executive"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff']}>
+                  <Executive />
+                </RoleGuard>
+              }
+            />
+
+            {/* Settings group */}
+            <Route path="settings" element={<Navigate to="settings/profile" replace />} />
+            <Route
+              path="settings/profile"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
+                  <ProfileSettings />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="settings/account"
+              element={
+                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
+                  <AccountSettings />
+                </RoleGuard>
+              }
+            />
+          </Route>
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </HashRouter>
+    </AdminProvider>
+  )
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
