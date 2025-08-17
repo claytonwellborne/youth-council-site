@@ -1,81 +1,80 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
-import './index.css'
-import Resources from './pages/admin/Resources'
-import Releases from './pages/admin/Releases'
-import Directory from './pages/admin/Directory'
-import Overview from './pages/admin/Overview'
-import AdminLayout from './components/admin/AdminLayout'
-import { useLocation, NavLink } from 'react-router-dom'
-import AdminGuard from './components/AdminGuard'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import './index.css';
 
-const Login = React.lazy(() => import('./pages/admin/Login'));
-const Dashboard = React.lazy(() => import('./pages/admin/Dashboard'));
-const Applications = React.lazy(() => import('./pages/admin/Applications'));
+import Navbar from './components/Navbar';
 
+// Public pages
+import Home from './pages/Home';
+import About from './pages/About';
+import Programs from './pages/Programs';
+import Chapters from './pages/Chapters';
+import Apply from './pages/Apply';
+import Contact from './pages/Contact';
 
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import About from './pages/About'
-import Chapters from './pages/Chapters'
-import Contact from './pages/Contact'
-import Ambassador from './pages/Ambassador'
+// Admin auth + shell
+import AdminGuard from './components/AdminGuard';
+import AdminLayout from './components/admin/AdminLayout';
+import Login from './pages/admin/Login';
 
-function Shell(){
+// Admin pages
+import Overview from './pages/admin/Overview';
+import Directory from './pages/admin/Directory';
+import Releases from './pages/admin/Releases';
+import Applications from './pages/admin/Applications';
+import Resources from './pages/admin/Resources';
+
+function RoutesWithNavbar() {
   const loc = useLocation();
   const isAdmin = loc.pathname.startsWith('/admin');
-  return (<>
-    {!isAdmin && <Navbar />}
-    <Routes>
-        {/* ADMIN */}
-        <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>} />
+
   return (
-    <HashRouter>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1">
-          <React.Suspense fallback={<div style={{padding:24}}>Loading…</div>}><Routes>
-        {/* ADMIN */}
-        <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>} />
+    <>
+      {!isAdmin && <Navbar />}
+
+      <Routes>
+        {/* Public */}
         <Route index element={<Home />} />
-        <Route index element={<Home />} />
-        {/* admin */}} /></AdminGuard>} /></AdminGuard>} />
-            {/* Landing */}
-            <Route path="/" element={<Home />} />
-            {/* keep /home as alias */}
-            <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/chapters" element={<Chapters />} />
+        <Route path="/apply" element={<Apply />} />
+        <Route path="/contact" element={<Contact />} />
 
-            {/* Core pages */}
-            <Route path="/about" element={<About />} />
-            <Route path="/ambassador" element={<Ambassador />} />
-            <Route path="/chapters" element={<Chapters />} />
-            <Route path="/contact" element={<Contact />} />
+        {/* Admin login is PUBLIC */}
+        <Route path="/admin/login" element={<Login />} />
 
-            {/* Redirect old paths */}
-            <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
-            <Route path="/apply" element={<Navigate to="/ambassador" replace />} />
+        {/* Admin area (guarded) */}
+        <Route
+          path="/admin/*"
+          element={
+            <AdminGuard>
+              <AdminLayout />
+            </AdminGuard>
+          }
+        >
+          <Route index element={<Overview />} />
+          <Route path="directory" element={<Directory />} />
+          <Route path="releases" element={<Releases />} />
+          <Route path="applications" element={<Applications />} />
+          <Route path="resources" element={<Resources />} />
+        </Route>
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />} />
-      </Routes></>)}
-
-function App() {</React.Suspense>
-        </main>
-
-        <footer className="border-t">
-          <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-gray-600 flex items-center justify-between flex-wrap gap-2">
-            <span>© {new Date().getFullYear()} Project 18</span>
-            <nav className="flex gap-4">
-              <Link to="/about" className="hover:text-gray-900">About</Link>
-              <Link to="/ambassador" className="hover:text-gray-900">Ambassador</Link>
-              <Link to="/ambassador" className="hover:text-gray-900">Apply</Link>
-            </nav>
-          </div>
-        </footer>
-      </div>
-    </HashRouter>
-  )
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
+  );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+function App() {
+  return (
+    <HashRouter>
+      <RoutesWithNavbar />
+    </HashRouter>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
