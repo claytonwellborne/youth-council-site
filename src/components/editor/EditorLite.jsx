@@ -12,14 +12,14 @@ export default function EditorLite({ value="", onChange, onUploadAsset }) {
   const pickFile = async (e) => {
     const file = e.target.files?.[0];
     if(!file) return;
-    const path = `post-assets/\${crypto.randomUUID()}-\${file.name}`;
+    const path = \`post-assets/\${crypto.randomUUID()}-\${file.name}\`;
     const { error } = await supabase.storage.from('press-assets').upload(path, file, { upsert:false });
     if (error) { alert(error.message); return; }
     const { data:pub } = supabase.storage.from('press-assets').getPublicUrl(path);
     const url = pub?.publicUrl; if (!url) return;
     onUploadAsset?.({ url, name: file.name, type: file.type });
     if (file.type.startsWith('image/')) exec('insertImage', url);
-    else exec('insertHTML', `<a href="${url}" target="_blank" rel="noreferrer">\${file.name}</a>`);
+    else exec('insertHTML', \`<a href="\${url}" target="_blank" rel="noreferrer">\${file.name}</a>\`);
     e.target.value = "";
   };
 
@@ -47,7 +47,7 @@ export default function EditorLite({ value="", onChange, onUploadAsset }) {
       </div>
       <div
         ref={ref}
-        className="min-h-[280px] p-4 prose max-w-none focus:outline-none"
+        className="min-h-[320px] p-4 prose max-w-none focus:outline-none"
         contentEditable
         dangerouslySetInnerHTML={{__html: value}}
         onInput={onInput}

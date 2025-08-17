@@ -32,22 +32,9 @@ export default function PressHub(){
     return x;
   },[rows,tab,q]);
 
-  const publish = async (r)=>{
-    const { error } = await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
-  const unpublish = async (r)=>{
-    const { error } = await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
-  const remove = async (r)=>{
-    if(!confirm('Delete this post?')) return;
-    const { error } = await supabase.from('press_posts').delete().eq('id', r.id);
-    if (error) return alert(error.message);
-    load();
-  };
+  const publish   = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'published', scheduled_at:null }).eq('id', r.id); if (error) alert(error.message); else load(); };
+  const unpublish = async (r)=>{ const { error } = await supabase.from('press_posts').update({ status:'draft', is_published:false }).eq('id', r.id);  if (error) alert(error.message); else load(); };
+  const remove    = async (r)=>{ if(!confirm('Delete this post?')) return; const { error } = await supabase.from('press_posts').delete().eq('id', r.id); if (error) alert(error.message); else load(); };
 
   return (
     <div className="space-y-6">
@@ -96,12 +83,10 @@ export default function PressHub(){
                 <td className="p-3 text-zinc-600">{r.published_at ? new Date(r.published_at).toLocaleString() : '—'}</td>
                 <td className="p-3">
                   <div className="flex justify-end gap-2">
-                    <Link to={`/admin/press/create?id=\${r.id}`} className="px-2 py-1 border rounded">Edit</Link>
-                    {r.status!=='published' ? (
-                      <button onClick={()=>publish(r)} className="px-2 py-1 border rounded">Publish</button>
-                    ) : (
-                      <button onClick={()=>unpublish(r)} className="px-2 py-1 border rounded">Unpublish</button>
-                    )}
+                    <Link to={`/admin/press/create?id=${r.id}`} className="px-2 py-1 border rounded">Edit</Link>
+                    {r.status!=='published'
+                      ? <button onClick={()=>publish(r)} className="px-2 py-1 border rounded">Publish</button>
+                      : <button onClick={()=>unpublish(r)} className="px-2 py-1 border rounded">Unpublish</button>}
                     <button onClick={()=>remove(r)} className="px-2 py-1 border rounded text-red-600">Delete</button>
                   </div>
                 </td>

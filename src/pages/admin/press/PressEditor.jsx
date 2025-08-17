@@ -35,7 +35,7 @@ export default function PressEditor(){
 
   const uploadCover = async (e)=>{
     const f = e.target.files?.[0]; if(!f) return;
-    const path = `covers/${crypto.randomUUID()}-${f.name}`;
+    const path = \`covers/\${crypto.randomUUID()}-\${f.name}\`;
     const { error } = await supabase.storage.from('press-assets').upload(path, f);
     if (error) { alert(error.message); return; }
     const { data:pub } = supabase.storage.from('press-assets').getPublicUrl(path);
@@ -61,9 +61,9 @@ export default function PressEditor(){
     if (!payload.title?.trim()) { alert("Title is required"); setSaving(false); return; }
     if (status === 'published') { payload.scheduled_at = null; }
 
-    let q;
-    if (postId) q = supabase.from('press_posts').update(payload).eq('id', postId).select('id').maybeSingle();
-    else q = supabase.from('press_posts').insert(payload).select('id').maybeSingle();
+    const q = postId
+      ? supabase.from('press_posts').update(payload).eq('id', postId).select('id').maybeSingle()
+      : supabase.from('press_posts').insert(payload).select('id').maybeSingle();
 
     const { data, error } = await q;
     setSaving(false);
