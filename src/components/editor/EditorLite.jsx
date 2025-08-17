@@ -21,15 +21,9 @@ export default function EditorLite({ value="", onChange }) {
         node.style.textAlign='left';
       }
     };
-    // force on root + existing children
     setLTR(el);
     el.querySelectorAll('*').forEach(setLTR);
-
-    const mo = new MutationObserver(muts=>{
-      muts.forEach(m=>{
-        m.addedNodes.forEach(setLTR);
-      });
-    });
+    const mo = new MutationObserver(m=>m.forEach(mu=>mu.addedNodes.forEach(setLTR)));
     mo.observe(el,{childList:true, subtree:true});
     return ()=> mo.disconnect();
   },[]);

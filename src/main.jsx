@@ -141,6 +141,8 @@ function App() {
 
             <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
             <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
+        <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
+        <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
 </Routes>
