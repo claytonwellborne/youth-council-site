@@ -28,15 +28,11 @@ export default function Press(){
   return (
     <main>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-indigo-50/60 to-white" />
-        <div className="mx-auto max-w-6xl px-4 pt-24 pb-12 text-center">
+      <section className="relative overflow-hidden">        <div className="mx-auto max-w-6xl px-4 pt-24 pb-12 text-center">
           <div className="mx-auto mb-5 h-14 w-14 rounded-2xl bg-gradient-to-tr from-brandRed to-brandBlue text-white grid place-items-center shadow-lg">
             <span className="text-2xl">📰</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold">
-            Press <span className="text-brandBlue">&amp; Media Center</span>
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold">Our Press</h1>
           <p className="mt-3 text-zinc-700 max-w-2xl mx-auto">
             News, updates, and media resources about Project 18’s work and impact.
           </p>
