@@ -4,13 +4,22 @@ import { Link, NavLink } from "react-router-dom";
 const base = import.meta.env.BASE_URL;
 const LOGO = `${base}logos/Black-Logo-No-BG.png`;
 
+// single source of truth for nav items
+const NAV_ITEMS = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/ambassador", label: "Ambassador" },
+  { to: "/press", label: "Press" },
+  { to: "/contact", label: "Contact" },
+];
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
-    if (open) document.body.style.overflow = "hidden";
+    document.body.style.overflow = open ? "hidden" : prev;
     return () => { document.body.style.overflow = prev; };
   }, [open]);
 
@@ -26,14 +35,9 @@ export default function Navbar() {
     (isActive ? "text-brandRed" : "text-zinc-900 hover:text-brandBlue");
 
   return (
-    <header
-      className={
-        "fixed top-0 inset-x-0 z-50 transition-all " +
-        (scrolled ? "bg-white/70 backdrop-blur-md shadow-sm" : "bg-transparent")
-      }
-    >
+    <header className={"fixed top-0 inset-x-0 z-50 transition-all " + (scrolled ? "bg-white/70 backdrop-blur-md shadow-sm" : "bg-transparent")}>
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
-        <Link to="/home" className="flex items-center gap-2 shrink-0">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <img src={LOGO} alt="Project 18" className="h-8 w-auto" />
           <span className="sr-only">Project 18</span>
         </Link>
@@ -41,12 +45,9 @@ export default function Navbar() {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
           <nav className="flex items-center gap-1">
-            <NavLink to="/home" className={linkClass}>Home</NavLink>
-            <NavLink to="/about" className={linkClass}>About</NavLink>
-            <NavLink to="/press" className={linkClass}>Press</NavLink>
-            <NavLink to="/ambassador" className={linkClass}>Ambassador</NavLink>
-            <NavLink to="/press" className={linkClass}>Press</NavLink>
-            <NavLink to="/contact" className={linkClass}>Contact</NavLink>
+            {NAV_ITEMS.map(item => (
+              <NavLink key={item.to} to={item.to} className={linkClass}>{item.label}</NavLink>
+            ))}
           </nav>
           <Link to="/ambassador#apply" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
         </div>
@@ -72,17 +73,13 @@ export default function Navbar() {
           onClick={() => setOpen(false)}
         />
         <div
-          className={
-            "absolute inset-0 bg-white transform transition-transform duration-250 " +
-            (open ? "translate-y-0" : "-translate-y-full")
-          }
+          className={"absolute inset-0 bg-white transform transition-transform duration-250 " + (open ? "translate-y-0" : "-translate-y-full")}
           role="dialog"
           aria-modal="true"
         >
           <div className="px-5 py-4 flex items-center justify-between border-b border-zinc-100">
             <div className="flex items-center gap-2">
               <img src={LOGO} alt="" className="h-7 w-auto" />
-              <span className="sr-only">Project 18</span>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -95,13 +92,7 @@ export default function Navbar() {
           </div>
 
           <nav className="px-6 pt-6 space-y-2">
-            {[
-              { to: "/home", label: "Home" },
-              { to: "/about", label: "About" },
-              { to: "/ambassador", label: "Ambassador" },
-              { to: "/chapters", label: "Chapters" },
-              { to: "/contact", label: "Contact" },
-            ].map((item, i) => (
+            {NAV_ITEMS.map((item, i) => (
               <NavLink
                 key={item.to}
                 to={item.to}

@@ -40,6 +40,7 @@ export default function Press(){
 
   return (
     <main className="pt-24 pb-16">
+      {/* crisp (not foggy) hero */}
       <section className="mx-auto max-w-6xl px-4 text-center mb-10">
         <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-tr from-brandRed/30 to-brandBlue/30 grid place-items-center">
           <span className="text-3xl">📰</span>
@@ -64,7 +65,7 @@ export default function Press(){
 
         <div className="grid md:grid-cols-2 gap-5">
           {list?.map(r=>(
-            <Link key={r.id} to={`/press/\${r.slug}`} className="card overflow-hidden hover:shadow-md transition-shadow">
+            <Link key={r.id} to={`/press/${r.slug}`} className="card overflow-hidden hover:shadow-md transition-shadow">
               {r.cover_url && <img src={r.cover_url} alt="" className="w-full h-48 object-cover" />}
               <div className="p-5">
                 <div className="flex flex-wrap gap-2 mb-2">
