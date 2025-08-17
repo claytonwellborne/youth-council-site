@@ -2,6 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import './index.css'
+import Resources from './pages/admin/Resources'
+import Releases from './pages/admin/Releases'
+import Directory from './pages/admin/Directory'
+import Overview from './pages/admin/Overview'
+import AdminLayout from './components/admin/AdminLayout'
+import { useLocation, NavLink } from 'react-router-dom'
 import AdminGuard from './components/AdminGuard'
 
 const Login = React.lazy(() => import('./pages/admin/Login'));
@@ -16,19 +22,25 @@ import Chapters from './pages/Chapters'
 import Contact from './pages/Contact'
 import Ambassador from './pages/Ambassador'
 
-function App() {
+function Shell(){
+  const loc = useLocation();
+  const isAdmin = loc.pathname.startsWith('/admin');
+  return (<>
+    {!isAdmin && <Navbar />}
+    <Routes>
+        {/* ADMIN */}
+        <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>} />
   return (
     <HashRouter>
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
           <React.Suspense fallback={<div style={{padding:24}}>Loading…</div>}><Routes>
+        {/* ADMIN */}
+        <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>} />
         <Route index element={<Home />} />
         <Route index element={<Home />} />
-        {/* admin */}
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
-        <Route path="/admin/applications" element={<AdminGuard><Applications /></AdminGuard>} />
+        {/* admin */}} /></AdminGuard>} /></AdminGuard>} />
             {/* Landing */}
             <Route path="/" element={<Home />} />
             {/* keep /home as alias */}
@@ -46,7 +58,9 @@ function App() {
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />} />
-      </Routes></React.Suspense>
+      </Routes></>)}
+
+function App() {</React.Suspense>
         </main>
 
         <footer className="border-t">
