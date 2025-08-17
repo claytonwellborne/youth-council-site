@@ -1,102 +1,58 @@
-import { useEffect, useState } from "react";
-import { Users, Mail, Calendar, Shield } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../lib/supabase";
+
+const titleCase = s => (s||'').split('_').map(x=>x[0]?.toUpperCase()+x.slice(1)).join(' ');
 
 export default function Directory(){
   const [team, setTeam] = useState([]);
   const [amb, setAmb] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [q, setQ] = useState('');
 
   const load = async ()=>{
-    setLoading(true);
-
-    // Team via RPC (bypasses RLS safely)
-    const { data: teamRows, error: tErr } = await supabase.rpc('list_team_profiles');
-    const teamList = (teamRows||[]).map(p => ({
-      id:p.email, full_name:p.email?.split('@')[0] ?? 'Team',
-      email:p.email, role:p.role, status:'staff'
-    }));
-
-    // Ambassadors (applications)
-    const { data: apps } = await supabase
-      .from('applications')
-      .select('id,full_name,email,notes,created_at,status')
-      .order('created_at', { ascending:false })
-      .limit(2000);
-
-    const ambRows = (apps||[]).map(a => ({
-      id:a.id, full_name:a.full_name || a.name || 'Unnamed', email:a.email||'',
-      created_date:a.created_at, status:(a.status||'reviewing'), join_reason:a.notes||''
-    }));
-
-    setTeam(teamList);
-    setAmb(ambRows);
-    setLoading(false);
+    const t = await supabase.rpc('list_team_profiles');
+    const a = await supabase.rpc('list_ambassador_profiles');
+    setTeam(t.data||[]); setAmb(a.data||[]);
   };
-
   useEffect(()=>{ load() },[]);
 
-  const statusCls = s => {
-    const x=(s||'').toLowerCase();
-    if (x==='active'||x==='accepted') return 'bg-green-100 text-green-800';
-    if (x==='reviewing'||x==='pending') return 'bg-yellow-100 text-yellow-800';
-    if (x==='staff') return 'bg-purple-100 text-purple-800';
-    return 'bg-gray-100 text-gray-800';
-  };
+  const filter = (rows)=> rows.filter(r=>{
+    const hay = `${r.full_name||''} ${r.email||''} ${r.location||''}`.toLowerCase();
+    return hay.includes(q.toLowerCase());
+  });
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Member Management</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-bold">Member Directory</h2>
+        <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search name, email, location…" className="border rounded-lg px-3 py-2 w-72"/>
+      </div>
 
-      <Card className="mb-6">
-        <CardHeader><CardTitle className="flex items-center gap-2"><Shield className="w-5 h-5"/>Team</CardTitle></CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {team.length ? team.map(m=>(
-              <div key={m.id} className="border rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <div className="font-semibold">{m.full_name}</div>
-                      <Badge className={statusCls('staff')}>Staff</Badge>
-                      <Badge variant="outline">{(m.role||'').split('_').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ')}</Badge>
-                    </div>
-                    <div className="text-sm text-gray-600">{m.email}</div>
-                  </div>
-                </div>
-              </div>
-            )) : <div className="text-gray-600">No team members yet.</div>}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle className="flex items-center gap-2"><Users className="w-5 h-5"/>Ambassadors ({amb.length})</CardTitle></CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {loading? <div>Loading…</div> : amb.length ? amb.map(m=>(
-              <div key={m.id} className="border rounded-lg p-4">
-                <div className="flex flex-col lg:flex-row justify-between gap-4">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-semibold text-lg">{m.full_name}</h3>
-                      <Badge className={statusCls(m.status)}>{m.status}</Badge>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                      {m.email && <div className="flex items-center gap-1"><Mail className="w-4 h-4"/>{m.email}</div>}
-                      {m.created_date && <div className="flex items-center gap-1"><Calendar className="w-4 h-4"/>Submitted: {new Date(m.created_date).toLocaleDateString()}</div>}
-                    </div>
-                    {m.join_reason && <p className="text-sm text-gray-700 italic">"{m.join_reason.slice(0,150)}{m.join_reason.length>150?'…':''}"</p>}
-                  </div>
-                </div>
-              </div>
-            )) : <div className="text-gray-600">No applications yet.</div>}
-          </div>
-        </CardContent>
-      </Card>
+      <Section title="Team (Exec/VP/RC)" rows={filter(team)} badge={(r)=>titleCase(r.role)} />
+      <Section title={`Ambassadors (${amb.length})`} rows={filter(amb)} />
     </div>
   );
+}
+
+function Section({ title, rows, badge }){
+  return (
+    <section className="border rounded-xl p-4 bg-white">
+      <h3 className="font-semibold mb-3">{title}</h3>
+      <div className="grid md:grid-cols-2 gap-3">
+        {rows.length ? rows.map(r=>(
+          <div key={r.email} className="border rounded-lg p-3 flex gap-3">
+            <img src={r.avatar_url || 'https://placehold.co/64x64'} alt="" className="w-14 h-14 rounded-full object-cover"/>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <div className="font-semibold">{r.full_name || r.email}</div>
+                {badge && <span className="text-xs px-2 py-0.5 rounded bg-purple-100 text-purple-800">{badge(r)}</span>}
+              </div>
+              <div className="text-sm text-gray-600">{r.email}</div>
+              {r.location && <div className="text-sm text-gray-600">{r.location}</div>}
+              {r.bio && <p className="text-sm text-gray-700 mt-1 line-clamp-2">{r.bio}</p>}
+            </div>
+          </div>
+        )) : <div className="text-gray-600">No profiles yet.</div>}
+      </div>
+    </section>
+  )
 }

@@ -1,60 +1,70 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
 import { supabase } from "../../lib/supabase";
+import { useAdmin } from "../../components/admin/AdminContext";
 import { Link } from "react-router-dom";
 
-const TEAM_ROLES = ['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator'];
-
 export default function Overview(){
-  const [stats, setStats] = useState({ team:0, ambassadors:0, pending:0 });
+  const { profile } = useAdmin();
+  const canPost = ['executive_director','chief_of_staff'].includes((profile?.role||'').toLowerCase());
+  const [list, setList] = useState([]);
+  const [f, setF] = useState({ title:'', body:'', pinned:false });
 
-  useEffect(()=>{ (async ()=>{
-    // applications
-    const { data: apps } = await supabase.from('applications').select('status').limit(2000);
-    const all = apps||[];
-    const ambassadors = all.filter(a => (a.status||'').toLowerCase()==='accepted' || (a.status||'').toLowerCase()==='active').length;
-    const pending = all.filter(a => !(a.status) || (a.status||'').toLowerCase()==='reviewing').length;
+  const load = async ()=>{
+    const { data } = await supabase.from('announcements')
+      .select('id,title,body,pinned,created_at')
+      .order('pinned',{ascending:false})
+      .order('created_at',{ascending:false}).limit(50);
+    setList(data||[]);
+  };
 
-    // team (only columns we know exist)
-    let team = 0;
-    const { data: profs } = await supabase.from('profiles').select('role').limit(2000);
-    team = (profs||[]).filter(p => TEAM_ROLES.includes((p.role||'').toLowerCase())).length;
+  useEffect(()=>{ load() },[]);
 
-    setStats({ team, ambassadors, pending });
-  })(); },[]);
-
-  const tiles = [
-    { label:'Team (Exec/VP/RC)', value:stats.team, ring:'bg-purple-100', icon:'🛡️' },
-    { label:'Active Ambassadors', value:stats.ambassadors, ring:'bg-green-100', icon:'🧑‍🤝‍🧑' },
-    { label:'Pending Applications', value:stats.pending, ring:'bg-yellow-100', icon:'⏳' },
-  ];
+  const post = async (e)=>{
+    e.preventDefault();
+    await supabase.from('announcements').insert({ ...f });
+    setF({ title:'', body:'', pinned:false }); load();
+  };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-      <p className="text-gray-600 mb-6">Quick overview</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {tiles.map(t=>(
-          <Card key={t.label} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">{t.label}</p>
-                  <p className="text-3xl font-bold">{t.value}</p>
-                </div>
-                <div className={`w-12 h-12 ${t.ring} rounded-lg grid place-items-center text-xl`}>{t.icon}</div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+    <div className="space-y-6">
+      <div className="grid sm:grid-cols-3 gap-4">
+        <Stat label="Team" to="/admin/directory" />
+        <Stat label="Applications" to="/admin/applications" />
+        <Stat label="Resources" to="/admin/resources" />
       </div>
 
-      <div className="mt-8 flex gap-3">
-        <Link to="/admin/directory"><Button>Open Member Management</Button></Link>
-        <Link to="/admin/applications"><Button variant="outline">View Applications</Button></Link>
-      </div>
+      {canPost && (
+        <form onSubmit={post} className="border rounded-xl p-4 bg-white">
+          <h3 className="font-semibold mb-2">Post announcement</h3>
+          <input required className="w-full border rounded-lg px-3 py-2 mb-2" placeholder="Title" value={f.title} onChange={e=>setF(s=>({...s, title:e.target.value}))}/>
+          <textarea required className="w-full border rounded-lg px-3 py-2 h-28 mb-2" placeholder="Write something…" value={f.body} onChange={e=>setF(s=>({...s, body:e.target.value}))}/>
+          <label className="inline-flex items-center gap-2 mb-3"><input type="checkbox" checked={f.pinned} onChange={e=>setF(s=>({...s, pinned:e.target.checked}))}/> Pin to top</label>
+          <div><button className="btn btn-gradient">Publish</button></div>
+        </form>
+      )}
+
+      <section className="border rounded-xl p-4 bg-white">
+        <h3 className="font-semibold mb-3">Announcements</h3>
+        <div className="space-y-3">
+          {(list||[]).map(a=>(
+            <article key={a.id} className="border rounded-lg p-3">
+              <div className="text-xs text-gray-500">{new Date(a.created_at).toLocaleString()} {a.pinned && '• Pinned'}</div>
+              <h4 className="font-semibold">{a.title}</h4>
+              <p className="text-gray-700 whitespace-pre-wrap">{a.body}</p>
+            </article>
+          ))}
+          {!list.length && <div className="text-gray-600">No announcements yet.</div>}
+        </div>
+      </section>
     </div>
   );
+}
+
+function Stat({label,to}) {
+  return (
+    <Link to={to} className="block border rounded-xl p-4 bg-white hover:shadow-sm">
+      <div className="text-sm text-gray-600">{label}</div>
+      <div className="text-2xl font-bold mt-1">Open</div>
+    </Link>
+  )
 }

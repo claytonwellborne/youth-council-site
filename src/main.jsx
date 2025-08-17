@@ -9,7 +9,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Chapters from './pages/Chapters';
-import Contact from './pages/Contact';
+import Contact from './pages/Contact'
+import PressRouter from './pages/press/routes';
 import Ambassador from './pages/Ambassador';
 
 // Admin shell

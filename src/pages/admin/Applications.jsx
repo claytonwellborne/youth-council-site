@@ -1,52 +1,79 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
 
 export default function Applications(){
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [q, setQ] = useState({ first:'', last:'', email:'' });
+  const [view, setView] = useState(null); // modal row
 
   const load = async ()=>{
-    setLoading(true);
-    const { data, error } = await supabase.from('applications').select('*').order('created_at', { ascending:false });
-    if (error) alert(error.message); else setRows(data||[]);
-    setLoading(false);
+    const { data } = await supabase.from('applications')
+      .select('*').order('created_at',{ascending:false}).limit(500);
+    setRows(data||[]);
   };
   useEffect(()=>{ load() },[]);
 
-  const setStatus = async (id, status)=>{ const { error } = await supabase.from('applications').update({ status }).eq('id', id); if (error) alert(error.message); else load();};
+  const search = (r)=>{
+    const [first,last] = (r.full_name||'').toLowerCase().split(' ');
+    const okFirst = q.first ? (first||'').includes(q.first.toLowerCase()) : true;
+    const okLast  = q.last  ? (last||'').includes(q.last.toLowerCase())   : true;
+    const okEmail = q.email ? (r.email||'').toLowerCase().includes(q.email.toLowerCase()) : true;
+    return okFirst && okLast && okEmail;
+  };
 
-  const chip = (s)=> s==='accepted'?'bg-green-100 text-green-800': s==='rejected'?'bg-red-100 text-red-800': s==='reviewing'?'bg-yellow-100 text-yellow-800':'bg-gray-100 text-gray-800';
+  const del = async (id)=>{ await supabase.from('applications').delete().eq('id', id); setRows(rows=>rows.filter(r=>r.id!==id)); };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Ambassador Applications</h2>
-      <Card>
-        <CardHeader><CardTitle>Incoming applications</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          {loading? <div>Loading…</div> : rows.length? rows.map(r=>(
-            <div key={r.id} className="border rounded-lg p-4">
-              <div className="flex justify-between gap-3">
-                <div>
-                  <div className="font-semibold">{r.full_name}</div>
-                  <div className="text-sm text-gray-600">{r.email}</div>
-                  {r.chapter && <div className="text-sm text-gray-600">Chapter: {r.chapter}</div>}
-                  {r.notes && <div className="text-sm text-gray-700 mt-1">{r.notes}</div>}
-                </div>
-                <div className="text-right space-y-2">
-                  <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs ${chip(r.status||'reviewing')}`}>{r.status||'reviewing'}</span>
-                  <div className="flex gap-2 justify-end">
-                    <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={()=>setStatus(r.id,'accepted')}>Accept</Button>
-                    <Button size="sm" variant="outline" onClick={()=>setStatus(r.id,'rejected')}>Reject</Button>
-                  </div>
-                </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Ambassador Applications</h2>
+        <details className="border rounded-lg p-2 bg-white">
+          <summary className="cursor-pointer font-medium">Advanced search</summary>
+          <div className="grid grid-cols-3 gap-2 mt-2">
+            <input className="border rounded px-2 py-1" placeholder="First" value={q.first} onChange={e=>setQ(s=>({...s, first:e.target.value}))}/>
+            <input className="border rounded px-2 py-1" placeholder="Last" value={q.last} onChange={e=>setQ(s=>({...s, last:e.target.value}))}/>
+            <input className="border rounded px-2 py-1" placeholder="Email" value={q.email} onChange={e=>setQ(s=>({...s, email:e.target.value}))}/>
+          </div>
+        </details>
+      </div>
+
+      <div className="space-y-3">
+        {rows.filter(search).map(r=>(
+          <div key={r.id} className="border rounded-lg p-3 bg-white">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="font-semibold">{r.full_name || 'Unnamed'}</div>
+                <div className="text-sm text-gray-600">{r.email}</div>
               </div>
+              <div className="text-sm text-gray-600">{new Date(r.created_at).toLocaleDateString()}</div>
             </div>
-          )): <div className="text-gray-600">No applications yet.</div>}
-        </CardContent>
-      </Card>
+            {r.notes && <p className="text-sm text-gray-700 mt-2 line-clamp-2">{r.notes}</p>}
+            <div className="mt-2 flex gap-2">
+              <button className="border rounded px-3 py-1" onClick={()=>setView(r)}>Expand</button>
+              <button className="border rounded px-3 py-1" onClick={()=>del(r.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
+        {!rows.length && <div className="text-gray-600">No applications yet.</div>}
+      </div>
+
+      {view && (
+        <div className="fixed inset-0 bg-black/40 grid place-items-center z-50" onClick={()=>setView(null)}>
+          <div className="bg-white max-w-2xl w-[92vw] rounded-xl p-4" onClick={e=>e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xl font-semibold">{view.full_name}</h3>
+              <button onClick={()=>setView(null)} className="border rounded px-2 py-1">Close</button>
+            </div>
+            <div className="text-sm text-gray-600">{view.email}</div>
+            <div className="text-sm text-gray-600 mb-2">{new Date(view.created_at).toLocaleString()}</div>
+            {view.school && <div className="mb-1"><b>School:</b> {view.school}</div>}
+            {view.city && <div className="mb-1"><b>City:</b> {view.city}</div>}
+            {view.state && <div className="mb-1"><b>State:</b> {view.state}</div>}
+            {view.committee && <div className="mb-1"><b>Committee:</b> {view.committee}</div>}
+            <pre className="whitespace-pre-wrap text-sm bg-zinc-50 border rounded p-3 mt-2">{view.notes || '—'}</pre>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
