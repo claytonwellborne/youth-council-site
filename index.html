@@ -3,27 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="icon" href="/favicon-white.png" />
     <title>Project 18</title>
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        theme: {
-          extend: {
-            colors: { brandBlue: '#0a66ff', brandRed: '#ff3b3b' }
-          }
-        }
+        theme: { extend: { colors: { brandBlue: '#0a66ff', brandRed: '#ff3b3b' } } }
       }
     </script>
   </head>
   <body class="bg-white text-zinc-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-
-
   </body>
-<script>(function(){if(!location.hash||location.hash==="#"){location.replace("#/");}})();</script>
 </html>

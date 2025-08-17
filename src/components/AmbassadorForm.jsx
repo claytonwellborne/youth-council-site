@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 
-// Fallbacks are safe; replace via .env + GH secrets when ready
 const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || 'https://script.google.com/macros/s/AKfycbzV0tUa7MSX5UrvSnqGu8qTkIAKP1AYKVD_TtDMObdvCXnCa_yb2KlDWciE7e_qx1aF/exec'
 const NOTIFY_EMAIL  = import.meta.env.VITE_NOTIFY_EMAIL  || 'wellborneclayton@gmail.com'
 
 export default function AmbassadorForm(){
   const [status, setStatus] = useState('idle')
-  const [error, setError]   = useState('')
+  const [error, setError] = useState('')
   const [data, setData] = useState({
     name: '', email: '', school: '', city: '', state: '',
     committee: 'Outreach & Chapters', why: '', experience: '', agree: false
@@ -14,7 +13,7 @@ export default function AmbassadorForm(){
 
   const onChange = e => {
     const { name, value, type, checked } = e.target
-    setData(d => ({ ...d, [name]: type === 'checkbox' ? checked : value }))
+    setData(d => ({ ...d, [name]: type==='checkbox' ? checked : value }))
   }
 
   const onSubmit = async e => {
@@ -23,28 +22,19 @@ export default function AmbassadorForm(){
     if (!FORM_ENDPOINT) { setStatus('error'); setError('Form endpoint missing.'); return }
     if (!data.agree)    { setStatus('error'); setError('Please agree to be contacted.'); return }
 
-    // Build FormData so the browser sets multipart/form-data automatically.
-    // Use mode:'no-cors' so the browser sends it without CORS preflight.
     const fd = new FormData()
-    for (const [k, v] of Object.entries(data)) fd.append(k, String(v))
-    fd.append('form', 'ambassador')
-    fd.append('notify', NOTIFY_EMAIL)
+    Object.entries(data).forEach(([k,v]) => fd.append(k, String(v)))
+    fd.append('form','ambassador'); fd.append('notify', NOTIFY_EMAIL)
 
     try {
-      await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',      // <-- avoids CORS block
-        body: fd              // multipart/form-data; Apps Script reads e.parameter
-        // IMPORTANT: do NOT set Content-Type header manually with FormData
-      })
-      // We can't read the response in no-cors mode; assume success if no network error.
+      await fetch(FORM_ENDPOINT, { method:'POST', mode:'no-cors', body: fd })
       setStatus('success')
     } catch (err) {
       setStatus('error'); setError(err.message || 'Network error.')
     }
   }
 
-  if (status === 'success') {
+  if (status==='success') {
     return (
       <div className="card p-6 text-left">
         <h3 className="text-xl font-bold mb-1">Thanks! 🎉</h3>

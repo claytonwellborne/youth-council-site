@@ -38,7 +38,7 @@ export default function Navbar() {
           <span className="sr-only">Project 18</span>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
           <nav className="flex items-center gap-1">
             <NavLink to="/home" className={linkClass}>Home</NavLink>
@@ -46,9 +46,8 @@ export default function Navbar() {
             <NavLink to="/ambassador" className={linkClass}>Ambassador</NavLink>
             <NavLink to="/chapters" className={linkClass}>Chapters</NavLink>
             <NavLink to="/contact" className={linkClass}>Contact</NavLink>
-          
           </nav>
-          <Link to="/ambassador" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
+          <Link to="/ambassador#apply" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -115,7 +114,7 @@ export default function Navbar() {
                 {item.label}
               </NavLink>
             ))}
-            <Link to="/ambassador" onClick={() => setOpen(false)} className="btn btn-gradient inline-block mt-3">Apply</Link>
+            <Link to="/ambassador#apply" onClick={() => setOpen(false)} className="btn btn-gradient inline-block mt-3">Apply</Link>
           </nav>
         </div>
       </div>
