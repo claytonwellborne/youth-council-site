@@ -56,14 +56,7 @@ export default function EditorLite({ value="", onChange, onUploadAsset }) {
       </div>
       <div
         ref={ref}
-        className="min-h-[320px] p-4 prose max-w-none focus:outline-none"
-        style={{direction:'ltr', unicodeBidi:'plaintext', textAlign:'left', whiteSpace:'pre-wrap'}}
-        contentEditable
-        dangerouslySetInnerHTML={{__html: value}}
-        onInput={onInput}
-        onBlur={onInput}
-        onPaste={onPaste}
-      />
+        className="min-h-[320px] p-4 prose max-w-none focus:outline-none" style={{direction:"ltr", unicodeBidi:"plaintext", textAlign:"left", whiteSpace:"pre-wrap"}} contentEditable dir="ltr">
     </div>
   );
 }

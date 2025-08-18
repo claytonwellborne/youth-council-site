@@ -27,7 +27,7 @@ export default function PressPost(){
   return (
     <main className="pt-24 pb-16">
       <article className="mx-auto max-w-3xl px-4">
-        <Link to="/press" className="text-sm text-zinc-600 hover:text-zinc-900">← Back to Press</Link>
+        <Link to="/admin/press" className="text-sm text-zinc-600 hover:text-zinc-900">← Back to Press</Link>
         <div className="flex items-center gap-3 text-sm text-zinc-600 mt-4">
           {post.primary_tag && (
             <span className="px-3 py-1 rounded-full text-sm text-zinc-900"

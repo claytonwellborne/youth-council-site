@@ -138,14 +138,10 @@ function App() {
           </Route>
 
           {/* Fallback */}
-  {/* Admin Press nested under AdminLayout */}
-  <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-    <Route path="press" element={<PressHub />} />
-    <Route path="press/create" element={<PressEditor />} />
-  </Route>
-  <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-    </HashRouter>
+
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+      </HashRouter>
     </AdminProvider>
   )
 }

@@ -31,7 +31,7 @@ export default function PressPost(){
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-24">
-      <Link to="/press" className="text-sm text-zinc-600 hover:text-zinc-900">← Back to Press</Link>
+      <Link to="/admin/press" className="text-sm text-zinc-600 hover:text-zinc-900">← Back to Press</Link>
       <h1 className="text-3xl md:text-4xl font-extrabold mt-2">{post.title}</h1>
       {post.subtitle && <p className="text-lg text-zinc-700 mt-1">{post.subtitle}</p>}
       <div className="mt-3 text-sm text-zinc-600 flex flex-wrap items-center gap-2">
