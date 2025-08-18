@@ -33,16 +33,6 @@ import ProfileSettings from './pages/admin/ProfileSettings'
 import AccountSettings from './pages/admin/AccountSettings'
 import { AdminProvider } from './components/admin/AdminContext'
 
-function PublicLayout(){
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-    </div>
-  );
-}
 
 function App() {
   return (
