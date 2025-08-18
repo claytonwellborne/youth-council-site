@@ -75,7 +75,10 @@ function App() {
       {/* Press */}
       <Route path="press" element={<PressHub />} />
       <Route path="press/create" element={<PressEditor />} />
-    </Route>
+    
+  <Route path="press" element={<PressHub />} />
+  <Route path="press/create" element={<PressEditor />} />
+</Route>
 
     {/* Fallback */}
     <Route path="*" element={<Navigate to="/" replace />} />
