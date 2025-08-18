@@ -143,6 +143,9 @@ function App() {
     <Route path="press" element={<PressHub />} />
     <Route path="press/create" element={<PressEditor />} />
   </Route>
+        <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
+        <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
+
   <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     </HashRouter>
