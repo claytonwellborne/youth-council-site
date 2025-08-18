@@ -97,7 +97,7 @@ export default function EditorLite({ value = "", onChange, onUploadAsset }) {
         // hard LTR — these three together prevent RTL flipping
         dir="ltr"
         style={{ direction: "ltr", unicodeBidi: "isolate", textAlign: "left", whiteSpace: "pre-wrap" }}
-        contentEditable
+        contentEditable dir="ltr" style="direction:ltr;unicode-bidi:plaintext;text-align:left;white-space:pre-wrap"
         dangerouslySetInnerHTML={{ __html: value || LRM }}
         onInput={emit}
         onBlur={emit}

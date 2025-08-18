@@ -47,100 +47,37 @@ function App() {
   return (
     <AdminProvider>
       <HashRouter>
-        <Routes>
-          {/* Public site */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/ambassador" element={<Ambassador />} />
-            <Route path="/contact" element={<Contact />} />
-            {/* legacy redirects */}
-            <Route path="/programs" element={<Navigate to="/ambassador" replace />} />
-            <Route path="/apply" element={<Navigate to="/ambassador#apply" replace />} />
-            {/* press */}
-            <Route path="/press" element={<Press />} />
-            <Route path="/press/:slug" element={<PressPost />} />
-          </Route>
+  <Routes>
+    {/* Public site */}
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/ambassador" element={<Ambassador />} />
+    <Route path="/press" element={<Press />} />
+    <Route path="/press/:slug" element={<PressPost />} />
+    <Route path="/contact" element={<Contact />} />
 
-          {/* Admin auth */}
-          <Route path="/admin/login" element={<Login />} />
+    {/* Admin auth (standalone) */}
+    <Route path="/admin/login" element={<Login />} />
 
-          {/* Admin app (no public navbar) */}
-          
-  <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-    <Route index element={<Overview />} />
-    <Route path="press" element={<PressHub />} />
-    <Route path="press/create" element={<PressEditor />} />
-  </Route>
-            <Route
-              path="directory"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
-                  <Directory />
-                </RoleGuard>
-              }
-            />
-            <Route
-              path="applications"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','regional_coordinator']}>
-                  <Applications />
-                </RoleGuard>
-              }
-            />
-            <Route
-              path="resources"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator']}>
-                  <Resources />
-                </RoleGuard>
-              }
-            />
-            <Route
-              path="press"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_pr']}>
-                  <PressEditor />
-                </RoleGuard>
-              }
-            />
-            <Route
-              path="executive"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff']}>
-                  <Executive />
-                </RoleGuard>
-              }
-            />
+    {/* Admin app (sidebar layout with nested children) */}
+    <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
+      <Route index element={<Overview />} />
+      <Route path="directory" element={<Directory />} />
+      <Route path="applications" element={<Applications />} />
+      <Route path="resources" element={<Resources />} />
+      <Route path="executive" element={<Executive />} />
+      <Route path="profile" element={<ProfileSettings />} />
+      <Route path="account" element={<AccountSettings />} />
 
-            {/* Settings group */}
-            <Route path="settings" element={<Navigate to="settings/profile" replace />} />
-            <Route
-              path="settings/profile"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
-                  <ProfileSettings />
-                </RoleGuard>
-              }
-            />
-            <Route
-              path="settings/account"
-              element={
-                <RoleGuard allow={['executive_director','chief_of_staff','vp_membership','vp_finance','vp_pr','regional_coordinator','ambassador']}>
-                  <AccountSettings />
-                </RoleGuard>
-              }
-            />
-          </Route>
+      {/* Press */}
+      <Route path="press" element={<PressHub />} />
+      <Route path="press/create" element={<PressEditor />} />
+    </Route>
 
-          {/* Fallback */}
-  {/* Admin Press nested under AdminLayout */}<Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
-        <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
-
-  <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-    </HashRouter>
+    {/* Fallback */}
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+</HashRouter>
     </AdminProvider>
   )
 }

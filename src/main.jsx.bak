@@ -67,15 +67,12 @@ function App() {
           <Route path="/admin/login" element={<Login />} />
 
           {/* Admin app (no public navbar) */}
-          <Route
-            path="/admin"
-            element={
-              <AdminGuard>
-                <AdminLayout />
-              </AdminGuard>
-            }
-          >
-            <Route index element={<Overview />} />
+          
+  <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
+    <Route index element={<Overview />} />
+    <Route path="press" element={<PressHub />} />
+    <Route path="press/create" element={<PressEditor />} />
+  </Route>
             <Route
               path="directory"
               element={
@@ -138,12 +135,7 @@ function App() {
           </Route>
 
           {/* Fallback */}
-  {/* Admin Press nested under AdminLayout */}
-  <Route path="/admin/*" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-    <Route path="press" element={<PressHub />} />
-    <Route path="press/create" element={<PressEditor />} />
-  </Route>
-        <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
+  {/* Admin Press nested under AdminLayout */}<Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
         <Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
 
   <Route path="*" element={<Navigate to="/" replace />} />
