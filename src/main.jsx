@@ -1,4 +1,5 @@
 import React from 'react'
+import PublicLayout from './components/layouts/PublicLayout';
 import PressHub from './pages/admin/press/PressHub';
 import PressEditor from './pages/admin/press/PressEditor';
 import ReactDOM from 'react-dom/client'
@@ -48,18 +49,20 @@ function App() {
     <AdminProvider>
       <HashRouter>
   <Routes>
-    {/* Public site */}
-    <Route path="/" element={<Home />} />
-    <Route path="/about" element={<About />} />
-    <Route path="/ambassador" element={<Ambassador />} />
-    <Route path="/press" element={<Press />} />
-    <Route path="/press/:slug" element={<PressPost />} />
-    <Route path="/contact" element={<Contact />} />
+    {/* Public site (with Navbar via PublicLayout) */}
+    <Route element={<PublicLayout />}>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/ambassador" element={<Ambassador />} />
+      <Route path="/press" element={<Press />} />
+      <Route path="/press/:slug" element={<PressPost />} />
+      <Route path="/contact" element={<Contact />} />
+    </Route>
 
     {/* Admin auth (standalone) */}
     <Route path="/admin/login" element={<Login />} />
 
-    {/* Admin app (sidebar layout with nested children) */}
+    {/* Admin app (no public navbar) */}
     <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
       <Route index element={<Overview />} />
       <Route path="directory" element={<Directory />} />

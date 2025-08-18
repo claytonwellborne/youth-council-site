@@ -92,12 +92,21 @@ export default function EditorLite({ value = "", onChange, onUploadAsset }) {
       </div>
 
       <div
-  className="min-h-[320px] p-4 prose max-w-none focus:outline-none"
-  dir="ltr"
-  style={{ direction: "ltr", unicodeBidi: "plaintext", textAlign: "left", whiteSpace: "pre-wrap" }}
-  contentEditable
-  dangerouslySetInnerHTML={{ __html: value || LRM }}
-  onInput={emit}
-/>
+        ref={ref}
+        className="min-h-[320px] p-4 prose max-w-none focus:outline-none"
+        // hard LTR — these three together prevent RTL flipping
+        dir="ltr"
+        style={{ direction: "ltr", unicodeBidi: "isolate", textAlign: "left", whiteSpace: "pre-wrap" }}
+        contentEditable dir="ltr" style="direction:ltr;unicode-bidi:plaintext;text-align:left;white-space:pre-wrap"
+        dangerouslySetInnerHTML={{ __html: value || LRM }}
+        onInput={emit}
+        onBlur={emit}
+        onPaste={onPaste}
+        onFocus={() => {
+          const el = ref.current;
+          if (el && !el.innerText.startsWith(LRM)) el.innerHTML = LRM + clean(el.innerHTML);
+        }}
+      />
+    </div>
   );
 }
