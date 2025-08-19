@@ -34,7 +34,6 @@ export default function About(){
           </p>
 
           <div className="mt-5 flex items-center justify-center gap-3 reveal">
-            <Link to="/programs" className="btn btn-gradient">Explore Programs</Link>
             <Link to="/ambassador" className="btn border border-zinc-200 rounded-xl font-semibold px-4 py-3">Start a Chapter</Link>
           </div>
         </div>

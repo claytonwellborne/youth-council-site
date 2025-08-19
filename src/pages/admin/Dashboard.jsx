@@ -70,7 +70,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage your youth organization's members and programs</p>
+          <p className="text-gray-600">Manage your youth organization's members and press posts</p>
         </motion.div>
         <div className="flex items-center gap-2">
           <Link to="/" className="text-sm text-gray-600 hover:underline">View website</Link>
@@ -201,7 +201,7 @@ export default function Dashboard() {
                     <div className="text-center py-12">
                       <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">No Programs Yet</h3>
-                      <p className="text-gray-600 mb-4">Create programs to start organizing activities.</p>
+                      <p className="text-gray-600 mb-4">Create press posts and resources to start organizing activities.</p>
                       <Button className="bg-blue-600 hover:bg-blue-700">Create First Program</Button>
                     </div>
                   )}
