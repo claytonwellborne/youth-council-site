@@ -1,3 +1,4 @@
+import AdminLayout from "@/components/admin/AdminLayout";
 import AdminGuard from './components/AdminGuard';
 import AdminLayout from './components/admin/AdminLayout';
 // src/main.jsx (or wherever your Router lives)
