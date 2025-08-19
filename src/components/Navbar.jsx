@@ -59,7 +59,7 @@ export default function Navbar() {
             {NAV_ITEMS.map(item => (
               <NavLink key={item.to} to={item.to} className={linkClass}>{item.label}</NavLink>
             ))}
-            {isAuthed && (<a href="#/admin" className="btn btn-gradient ml-2">Admin</a>)}
+            {isAuthed && (<a href="#/admin" className="btn btn-gradient ml-2">Admin</Link>)}
 </nav>
           <Link to="/ambassador#apply" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
         </div>

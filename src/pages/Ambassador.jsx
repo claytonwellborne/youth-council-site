@@ -26,7 +26,7 @@ export default function Ambassador(){
           <span className="inline-block text-[12px] tracking-wider uppercase rounded-full border border-zinc-200 px-2 py-1 reveal">
             Ambassador Program
           </span>
-          <h1  className="mt-3 text-4xl md:text-5xl font-extrabold reveal text-center p18-gradient-text">
+          <h1    className="mt-3 text-4xl md:text-5xl font-extrabold reveal text-center p18-gradient-text text-center p18-gradient-text text-center p18-gradient-text">
             Become a Project 18 <span className="bg-clip-text text-transparent bg-gradient-to-r from-brandRed to-brandBlue">Ambassador</span>
           </h1>
           <p className="mt-3 max-w-2xl mx-auto text-zinc-700 reveal">
@@ -34,7 +34,7 @@ export default function Ambassador(){
           </p>
 
           <div className="mt-5 flex items-center justify-center gap-3 reveal">
-            <a href="#apply" className="btn btn-gradient">Apply now</a>
+            <a href="#apply" className="btn btn-gradient">Apply now</Link>
             <Link to="/about" className="btn border border-zinc-200 rounded-xl font-semibold px-4 py-3">Learn more</Link>
           </div>
         </div>

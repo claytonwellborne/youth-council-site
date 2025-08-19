@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Link } from "react-router-dom";
 
 console.log("P18 Home build:", new Date().toISOString());
@@ -96,8 +97,8 @@ function Hero() {
           Project 18 turns motivated students into credible leaders through real work, mentorship, and measurable impact.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28 }}>
-          <a href="/ambassador" style={primaryBtn}>Become An Ambassador</Link>
-          <a href="/about" style={ghostBtn}>About Us</Link>
+          <Link to="/ambassador" style={primaryBtn}>Become An Ambassador</Link>
+          <Link to="/about" style={ghostBtn}>About Us</Link>
         </div>
       </div>
     </section>
@@ -215,7 +216,7 @@ function CTA() {
         <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", margin: 0 }}>Your America. Your Leadership. Start Now.</h2>
         <p style={{ marginTop: 12, color: "#555" }}>Apply in two minutes. We’ll follow up with next steps and a welcome call.</p>
         <div style={{ marginTop: 24 }}>
-          <a href="/ambassador" style={primaryBtn}>Apply Now</Link>
+          <Link to="/ambassador" style={primaryBtn}>Apply Now</Link>
         </div>
       </div>
     </section>

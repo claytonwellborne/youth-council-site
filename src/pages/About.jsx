@@ -28,7 +28,7 @@ export default function About(){
 
         <div className="mx-auto max-w-6xl px-4 pt-28 pb-10 text-center">
           <span className="inline-block text-[12px] tracking-wider uppercase rounded-full border border-zinc-200 px-2 py-1 reveal">About Project 18</span>
-          <h1  className="mt-3 text-4xl md:text-5xl font-extrabold reveal text-center p18-gradient-text">Young leaders. <span className="bg-clip-text text-transparent bg-gradient-to-r from-brandRed to-brandBlue">Real outcomes.</span></h1>
+          <h1    className="mt-3 text-4xl md:text-5xl font-extrabold reveal text-center p18-gradient-text text-center p18-gradient-text text-center p18-gradient-text">Young leaders. <span className="bg-clip-text text-transparent bg-gradient-to-r from-brandRed to-brandBlue">Real outcomes.</span></h1>
           <p className="mt-3 max-w-2xl mx-auto text-zinc-700 reveal">
             We train youth to lead by doing—running forums, publishing research, and delivering community projects that actually move the needle.
           </p>

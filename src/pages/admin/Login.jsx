@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
-const REDIRECT = 'https://weareproject18.com/#/admin';
+const REDIRECT = "/#/admin";
 
 function useHashParams() {
   return useMemo(() => new URLSearchParams((window.location.hash.split('?')[1] || '')), []);
