@@ -44,17 +44,16 @@ function App() {
 
     {/* Admin app (sidebar layout with nested children) */}
     <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-      <Route index element={<Overview />} />
-      <Route path="directory" element={<Directory />} />
-      <Route path="applications" element={<Applications />} />
-      <Route path="resources" element={<Resources />} />
-      <Route path="executive" element={<Executive />} />
-      <Route path="profile" element={<ProfileSettings />} />
-      <Route path="account" element={<AccountSettings />} />
-      {/* Press */}
-      <Route path="press" element={<PressHub />} />
-      <Route path="press/create" element={<PressEditor />} />
-    </Route>
+    <Route index element={<Overview />} />
+    <Route path="directory" element={<Directory />} />
+    <Route path="applications" element={<Applications />} />
+    <Route path="resources" element={<Resources />} />
+    <Route path="executive" element={<Executive />} />
+    <Route path="profile" element={<ProfileSettings />} />
+    <Route path="account" element={<AccountSettings />} />
+    <Route path="press" element={<PressHub />} />
+    <Route path="press/create" element={<PressEditor />} />
+  </Route>
 
     {/* Fallback */}
     <Route path="*" element={<Navigate to="/" replace />} />
