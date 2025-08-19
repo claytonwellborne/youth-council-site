@@ -22,7 +22,7 @@ import Press from './pages/press/Press'
 import PressPost from './pages/press/PressPost'
 
 import Settings from './pages/admin/Settings'
-import PressCreation from './pages/admin/PressCreation'
+import PressCreation from './pages/admin/press/PressEditor'
 import Executive from './pages/admin/Executive'
 
 function App() {
