@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import './index.css'
 
+/** Public UI */
 import Navbar from './components/Navbar'
-
-// Public pages
 import Home from './pages/Home'
 import About from './pages/About'
 import Chapters from './pages/Chapters'
@@ -15,41 +14,69 @@ import Contact from './pages/Contact'
 import Press from './pages/press/Press'
 import PressPost from './pages/press/PressPost'
 
-// Admin
+/** Admin UI */
 import AdminGuard from '@/components/AdminGuard'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Login from '@/pages/admin/Login'
-import Dashboard from '@/pages/admin/Dashboard'
+import Overview from '@/pages/admin/Overview'
+import Directory from '@/pages/admin/Directory'
+import Resources from '@/pages/admin/Resources'
 import Applications from '@/pages/admin/Applications'
 import Executive from '@/pages/admin/Executive'
 import PressHub from './pages/admin/press/PressHub'
 import PressEditor from './pages/admin/press/PressEditor'
 
+/** Public shell to keep Navbar off admin pages */
+function PublicShell() {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  )
+}
+
 function App() {
   return (
     <HashRouter>
-      <Navbar />
       <Routes>
-        {/* Public site */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/chapters" element={<Chapters />} />
-        <Route path="/apply" element={<Apply />} />
-        <Route path="/ambassador" element={<Ambassador />} />
-        <Route path="/press" element={<Press />} />
-        <Route path="/press/:slug" element={<PressPost />} />
-        <Route path="/contact" element={<Contact />} />
+        {/* Public site (Navbar visible) */}
+        <Route element={<PublicShell />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/chapters" element={<Chapters />} />
+          <Route path="/apply" element={<Apply />} />
+          <Route path="/ambassador" element={<Ambassador />} />
+          <Route path="/press" element={<Press />} />
+          <Route path="/press/:slug" element={<PressPost />} />
+          <Route path="/contact" element={<Contact />} />
+        </Route>
 
         {/* Admin auth (standalone) */}
         <Route path="/admin/login" element={<Login />} />
 
-        {/* Admin app (sidebar layout with nested children) */}
-        <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
-          <Route index element={<Dashboard />} />
+        {/* Admin app (no Navbar) */}
+        <Route
+          path="/admin"
+          element={
+            <AdminGuard>
+              <AdminLayout />
+            </AdminGuard>
+          }
+        >
+          {/* Default landing = Overview (your UI) */}
+          <Route index element={<Overview />} />
+
+          {/* Admin sections */}
+          <Route path="directory" element={<Directory />} />
+          <Route path="resources" element={<Resources />} />
           <Route path="applications" element={<Applications />} />
           <Route path="executive" element={<Executive />} />
+
+          {/* Press — hub is the main page; create/edit are explicit */}
           <Route path="press" element={<PressHub />} />
           <Route path="press/create" element={<PressEditor />} />
+          <Route path="press/edit/:id" element={<PressEditor />} />
         </Route>
 
         {/* Fallback */}
