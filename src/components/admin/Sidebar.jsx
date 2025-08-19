@@ -46,8 +46,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
 
         {/* Bottom actions */}
         <div className="mt-auto pt-3 border-t">
-          <a href="#/" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">View website</NavLink>
-          <a href="#/admin/login?signout=1" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">Sign out</NavLink>
+          <NavLink to="/" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">View website</NavLink>
+          <NavLink to="/admin/login?signout=1" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">Sign out</NavLink>
         </div>
       </nav>
     </aside>
