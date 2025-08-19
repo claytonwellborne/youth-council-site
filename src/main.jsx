@@ -1,4 +1,5 @@
 // src/main.jsx (or wherever your Router lives)
+import Ambassador from './pages/Ambassador';
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
@@ -31,8 +32,7 @@ function App() {
   <Routes>
     {/* Public site */}
     <Route path="/" element={<Home />} />
-    <Route path="/about" element={<About />} />
-    <Route path="/ambassador" element={<Ambassador />} />
+    <Route path="/about" element={<About />} />} />
     <Route path="/press" element={<Press />} />
     <Route path="/press/:slug" element={<PressPost />} />
     <Route path="/contact" element={<Contact />} />
