@@ -23,6 +23,8 @@ import Directory from '@/pages/admin/Directory'
 import Resources from '@/pages/admin/Resources'
 import Applications from '@/pages/admin/Applications'
 import Executive from '@/pages/admin/Executive'
+import ProfileSettings from '@/pages/admin/ProfileSettings'
+import AccountSettings from '@/pages/admin/AccountSettings'
 import PressHub from './pages/admin/press/PressHub'
 import PressEditor from './pages/admin/press/PressEditor'
 
@@ -65,7 +67,9 @@ function App() {
           }
         >
           {/* Default landing = Overview (your UI) */}
-          <Route index element={<Overview />} />
+          <Route index element={<Overview />          <Route path="profile" element={<ProfileSettings />} />
+          <Route path="account" element={<AccountSettings />} />
+} />
 
           {/* Admin sections */}
           <Route path="directory" element={<Directory />} />
