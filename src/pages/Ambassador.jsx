@@ -34,7 +34,7 @@ export default function Ambassador(){
           </p>
 
           <div className="mt-5 flex items-center justify-center gap-3 reveal">
-            <a href="#apply" className="btn btn-gradient">Apply now</Link>
+            <a href="#apply-form" className="btn btn-gradient">Apply now</a>
             <Link to="/about" className="btn border border-zinc-200 rounded-xl font-semibold px-4 py-3">Learn more</Link>
           </div>
         </div>
