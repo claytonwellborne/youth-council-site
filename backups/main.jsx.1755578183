@@ -1,0 +1,59 @@
+// src/main.jsx (or wherever your Router lives)
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import './index.css'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import About from './pages/About'
+import Programs from './pages/Programs'
+import Chapters from './pages/Chapters'
+import Apply from './pages/Apply'
+import Contact from './pages/Contact'
+
+import AdminGuard from '@/components/AdminGuard'
+import Login from '@/pages/admin/Login'
+import Dashboard from '@/pages/admin/Dashboard'
+import Applications from '@/pages/admin/Applications'
+
+import PressHub from './pages/admin/press/PressHub';
+import PressEditor from './pages/admin/press/PressEditor';
+
+import Press from './pages/press/Press'
+import PressPost from './pages/press/PressPost'
+
+import Settings from './pages/admin/Settings'
+import PressCreation from './pages/admin/PressCreation'
+import Executive from './pages/admin/Executive'
+
+function App() {
+  return (
+    <HashRouter>
+      <Navbar />
+      <Routes>
+        {/* public */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/chapters" element={<Chapters />} />
+        <Route path="/apply" element={<Apply />} />
+        <Route path="/contact" element={<Contact />} />
+
+        {/* admin */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin" element={
+          <AdminGuard><Dashboard /></AdminGuard>
+        } />
+        <Route path="/admin/press" element={<AdminGuard><PressHub /></AdminGuard>} />
+<Route path="/admin/press/create" element={<AdminGuard><PressEditor /></AdminGuard>} />
+        <Route path="/admin/applications" element={
+          <AdminGuard><Applications /></AdminGuard>
+        } />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)

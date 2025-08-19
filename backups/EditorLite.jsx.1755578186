@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from "react";
 
-const LRM = "\u200E"; // keeps caret sane when empty
+const LRM = "\u200E"; // left-to-right mark to keep caret sane when empty
 
 export default function EditorLite({ value = "", onChange }) {
   const ref = useRef(null);
 
-  const emit = (e) => onChange?.(e.currentTarget.innerHTML);
+  const emit = (e) => {
+    onChange?.(e.currentTarget.innerHTML);
+  };
 
+  // keep DOM in sync when parent value changes
   useEffect(() => {
     if (ref.current && typeof value === "string" && ref.current.innerHTML !== value) {
       ref.current.innerHTML = value || LRM;
