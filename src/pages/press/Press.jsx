@@ -32,7 +32,7 @@ export default function Press(){
           <div className="mx-auto mb-5 h-14 w-14 rounded-2xl bg-gradient-to-tr from-brandRed to-brandBlue text-white grid place-items-center shadow-lg">
             <span className="text-2xl">📰</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold">Our Press</h1>
+          <h1  className="text-4xl md:text-5xl font-extrabold text-center p18-gradient-text">Our Press</h1>
           <p className="mt-3 text-zinc-700 max-w-2xl mx-auto">
             News, updates, and media resources about Project 18’s work and impact.
           </p>
