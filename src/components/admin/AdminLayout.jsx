@@ -23,11 +23,6 @@ export default function AdminLayout(){
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div>
               <div className="text-xs text-gray-500">Signed in as</div>
-              <div className="font-bold">
-                {profile?.full_name || profile?.email || "—"}
-                <span className="text-gray-500 font-normal">
-                  {" "}• {(profile?.role||'').split('_').map(x=>x[0]?.toUpperCase()+x.slice(1)).join(' ')}
-                </span>
               </div>
             </div>
             <img
@@ -46,3 +41,12 @@ export default function AdminLayout(){
     </div>
   );
 }
+
+// derive display data with safe fallbacks
+function p18UserMeta(user){
+  const displayName = user?.user_metadata?.name || user?.email || "Admin";
+  const role = user?.user_metadata?.role || user?.app_metadata?.role || "Member";
+  const avatarUrl = user?.user_metadata?.avatar_url || null;
+  return {displayName, role, avatarUrl};
+}
+
