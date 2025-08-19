@@ -59,9 +59,8 @@ export default function Navbar() {
             {NAV_ITEMS.map(item => (
               <NavLink key={item.to} to={item.to} className={linkClass}>{item.label}</NavLink>
             ))}
-            {isAuthed && (<a href="#/admin" className="btn btn-gradient ml-2">Admin</Link>)}
+            {isAuthed && (<Link to="/admin" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-r from-red-500 to-blue-600 text-white shadow-md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12zm0 1.5c-3.038 0-9 1.522-9 4.5V21h18v-3c0-2.978-5.962-4.5-9-4.5z"/></svg></Link>)}
 </nav>
-          <Link to="/ambassador#apply" className="hidden md:inline-block btn btn-gradient ml-2">Apply</Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -118,7 +117,6 @@ export default function Navbar() {
                 {item.label}
               </NavLink>
             ))}
-            <Link to="/ambassador#apply" onClick={() => setOpen(false)} className="btn btn-gradient inline-block mt-3">Apply</Link>
           </nav>
         </div>
       </div>
