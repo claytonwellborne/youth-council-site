@@ -38,8 +38,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           </button>
           {open && (
             <div className="pl-3 space-y-1">
-              <Item to="/admin/settings/profile">Profile</Item>
-              <Item to="/admin/settings/account">Account</Item>
+              <Item to="/admin/profile">Profile</Item>
+              <Item to="/admin/account">Account</Item>
             </div>
           )}
         </div>

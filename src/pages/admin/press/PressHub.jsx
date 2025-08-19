@@ -54,7 +54,7 @@ export default function PressHub() {
               </button>
             ))}
           </div>
-          <Link to="/admin/press" className="btn btn-gradient rounded-lg">New Post</Link>
+          <Link to="/admin/press/create"><button type="button" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-brandRed to-brandBlue text-white font-semibold hover:opacity-95 shadow-sm">New Post</button></Link>
         </div>
       </header>
 

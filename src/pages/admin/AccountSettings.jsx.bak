@@ -1,0 +1,23 @@
+import { supabase } from "../../lib/supabase";
+import { useAdmin } from "../../components/admin/AdminContext";
+
+export default function AccountSettings(){
+  const { session } = useAdmin();
+  const email = session?.user?.email;
+
+  const resetPw = async ()=>{
+    if (!email) return alert('No email on file.');
+    await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/#/admin/login` });
+    alert('Password reset email sent.');
+  };
+
+  return (
+    <div className="max-w-2xl">
+      <h2 className="text-2xl font-bold mb-4">Account</h2>
+      <div className="border rounded-xl p-4 bg-white">
+        <div className="mb-2"><b>Email:</b> {email || '—'}</div>
+        <button className="btn btn-gradient" onClick={resetPw}>Reset password</button>
+      </div>
+    </div>
+  );
+}

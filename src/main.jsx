@@ -68,11 +68,8 @@ function App() {
         >
           {/* Default landing = Overview (your UI) */}
           <Route index element={<Overview />} />
-          <Route path="profile" element={<ProfileSettings />} />
-          <Route path="account" element={<AccountSettings />} />
-          <Route path="account" element={<AccountSettings />} />
-
-          {/* Admin sections */}
+          <Route path="profile" element={<ProfileSettings />} /><Route path="account" element={<AccountSettings />} />
+{/* Admin sections */}
           <Route path="directory" element={<Directory />} />
           <Route path="resources" element={<Resources />} />
           <Route path="applications" element={<Applications />} />
