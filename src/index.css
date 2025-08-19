@@ -62,3 +62,7 @@ a { color: inherit; text-decoration: none; }
 
 /* If your Home page draws huge dark 18s via a class, tone them down */
 .bg-18 { color: #efeff3; opacity: 0.6; }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
