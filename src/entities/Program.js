@@ -2,7 +2,7 @@ import { supabase } from '../lib/supabase';
 
 export const Program = {
   async list(order='-created_date'){
-    const { data, error } = await supabase.from('programs').select('*').order('created_at', { ascending: false }).limit(1000);
+    const { data, error } = await supabase.from('press').select('*').order('created_at', { ascending: false }).limit(1000);
     if (error && error.code !== '42P01') { // table missing -> ignore
       throw error;
     }

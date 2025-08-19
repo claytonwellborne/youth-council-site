@@ -54,7 +54,7 @@ export default function PressHub() {
               </button>
             ))}
           </div>
-          <Link to="/admin/press/create" className="btn btn-gradient rounded-lg">New Post</Link>
+          <Link to="/admin/press" className="btn btn-gradient rounded-lg">New Post</Link>
         </div>
       </header>
 
@@ -84,7 +84,7 @@ export default function PressHub() {
                 <td className="p-3 text-zinc-600">{r.display_date || (r.published_at ? new Date(r.published_at).toISOString().slice(0, 10) : "—")}</td>
                 <td className="p-3">
                   <div className="flex justify-end gap-2">
-                    <Link to={`/admin/press/create?id=${r.id}`} className="px-2 py-1 border rounded">Edit</Link>
+                    <Link to={`/admin/press?id=${r.id}`} className="px-2 py-1 border rounded">Edit</Link>
                     {r.status !== "published" ? (
                       <button onClick={() => publish(r)} className="px-2 py-1 border rounded">Publish</button>
                     ) : (

@@ -107,7 +107,7 @@ export default function Dashboard() {
         <Tabs defaultValue="members" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 lg:w-96">
             <TabsTrigger value="members" className="flex items-center gap-2"><Users className="w-4 h-4" />Members ({stats.totalMembers})</TabsTrigger>
-            <TabsTrigger value="programs" className="flex items-center gap-2"><BookOpen className="w-4 h-4" />Programs ({stats.totalPrograms})</TabsTrigger>
+            <TabsTrigger value="press" className="flex items-center gap-2"><BookOpen className="w-4 h-4" />Programs ({stats.totalPrograms})</TabsTrigger>
           </TabsList>
 
           {/* Members */}
@@ -174,7 +174,7 @@ export default function Dashboard() {
           </TabsContent>
 
           {/* Programs */}
-          <TabsContent value="programs">
+          <TabsContent value="press">
             <Card>
               <CardHeader><CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5" />Program Overview</CardTitle></CardHeader>
               <CardContent>
