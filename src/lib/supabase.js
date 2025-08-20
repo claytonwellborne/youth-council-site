@@ -1,12 +1,14 @@
-import { createClient } from '@supabase/supabase-js'
+/**
+ * Backend removed: this stub makes any remaining imports no-op.
+ * All methods return { data: null, error: new Error('Backend removed') }.
+ */
+const noop = async () => ({ data: null, error: new Error('Backend removed') });
 
-const url = import.meta.env.VITE_SUPABASE_URL
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY
+export const supabase = new Proxy({}, {
+  get: () => new Proxy(noop, {
+    apply: () => noop(),
+    get: () => noop
+  })
+});
 
-if (!url || !anon) {
-  console.warn('[Supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. Auth/data will not work.')
-}
-
-export const supabase = createClient(url ?? '', anon ?? '', {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
-})
+export default supabase;
