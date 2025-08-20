@@ -1,88 +1,22 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import React from "react";
 
 export default function Press(){
-  const [rows,setRows]=useState(null);
-  const [filter,setFilter]=useState('All');
-
-  useEffect(()=>{
-    (async ()=>{
-      const { data } = await supabase
-        .from('press_posts')
-        .select('id, slug, title, subtitle, cover_url, tags, primary_tag, primary_tag_color, published_at, display_date, published_by')
-        .eq('status','published')
-        .order('published_at',{ascending:false});
-      const ids = Array.from(new Set((data||[]).map(r=>r.published_by).filter(Boolean)));
-      let names = {};
-      if (ids.length){
-        const { data: profs } = await supabase.from('profiles').select('id, full_name').in('id', ids);
-        (profs||[]).forEach(p=>{ names[p.id]=p.full_name || 'Project 18'; });
-      }
-      setRows((data||[]).map(r=>({ ...r, author_name: names[r.published_by] || 'Project 18' })));
-    })();
-  },[]);
-
-  const tags = useMemo(()=>{
-    const set = new Set(); (rows||[]).forEach(r=>(r.tags||[]).forEach(t=>set.add(t)));
-    return ['All', ...Array.from(set)];
-  },[rows]);
-
-  const list = useMemo(()=>{
-    if (!rows) return null;
-    if (filter==='All') return rows;
-    return rows.filter(r=>(r.tags||[]).includes(filter));
-  },[rows,filter]);
-
-  const prettyDate = (r)=>{
-    const d = r.display_date ? new Date(r.display_date) : (r.published_at ? new Date(r.published_at) : null);
-    return d ? d.toLocaleDateString() : '';
-  };
-
   return (
-    <main className="pt-24 pb-16">
-      <section className="mx-auto max-w-6xl px-4 text-center mb-10">
-        <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-tr from-brandRed/30 to-brandBlue/30 grid place-items-center">
-          <span className="text-3xl">📰</span>
+    <div className="min-h-[70vh] bg-gradient-to-br from-[#ff4d4d] via-[#a15cff] to-[#2a6dfd] py-16">
+      <div className="max-w-5xl mx-auto px-4 text-white">
+        <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow">Press (In Development)</h1>
+        <p className="mt-3 text-white/90">We’re moving press updates to Substack. New posts will sync here automatically.</p>
+        <div className="mt-8 bg-white rounded-xl p-4 shadow-xl">
+          {/* Substack embed (replace with your publication if needed) */}
+          <iframe
+            src="https://substack.com/embed"
+            title="Substack"
+            width="100%"
+            height="380"
+            style={{border:"0"}}
+          ></iframe>
         </div>
-        <h1 className="mt-4 text-4xl md:text-5xl font-extrabold">Our Press</h1>
-        <p className="mt-3 text-zinc-700">News, updates, and media resources about Project 18’s work and impact.</p>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4">
-        <div className="flex flex-wrap gap-2 mb-6">
-          {tags.map(t=>(
-            <button key={t}
-              onClick={()=>setFilter(t)}
-              className={`px-3 py-1 rounded-full border ${filter===t ? 'bg-gradient-to-r from-brandRed to-brandBlue text-white border-transparent' : 'bg-white'}`}>
-              {t}
-            </button>
-          ))}
-        </div>
-
-        {!rows && <div className="card p-6">Loading…</div>}
-        {rows && list?.length===0 && <div className="card p-6">No releases yet.</div>}
-
-        <div className="grid md:grid-cols-2 gap-5">
-          {list?.map(r=>(
-            <Link key={r.id} to={`/press/${r.slug}`} className="card overflow-hidden hover:shadow-md transition-shadow">
-              {r.cover_url && <img src={r.cover_url} alt="" className="w-full h-48 object-cover" />}
-              <div className="p-5">
-                <div className="flex items-center gap-3 text-sm text-zinc-600 mb-2">
-                  {r.primary_tag && (
-                    <span className="px-3 py-1 rounded-full text-sm text-zinc-900"
-                          style={{backgroundColor: r.primary_tag_color || '#e6ecff'}}>{r.primary_tag}</span>
-                  )}
-                  <span>{prettyDate(r)}</span>
-                  <span>• {r.author_name}</span>
-                </div>
-                <h3 className="text-lg font-bold">{r.title}</h3>
-                {r.subtitle && <p className="text-zinc-700 mt-1">{r.subtitle}</p>}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
