@@ -11,5 +11,4 @@ export default function RoleGuard({ allow = [], committee = null, children }) {
   const okRole = allow.includes(role) || (profile?.is_admin ?? false);
   const okCommittee = committee ? (userCommittee === committee) : true;
 
-  return okRole && okCommittee ? children : <Navigate to="/admin" replace />;
 }

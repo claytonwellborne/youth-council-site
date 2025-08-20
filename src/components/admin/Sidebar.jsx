@@ -23,12 +23,6 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       </div>
       <nav className="px-2 space-y-1 flex flex-col h-[calc(100vh-48px)]">
         <div className="space-y-1">
-          <Item to="/admin">Overview</Item>
-          <Item to="/admin/directory">Directory</Item>
-          <Item to="/admin/applications">Ambassador Applications</Item>
-          <Item to="/admin/resources">Resources</Item>
-          <Item to="/admin/press">Press</Item>
-          <Item to="/admin/executive">Executive Home</Item>
 
           <button
             className="w-full text-left px-3 py-2 rounded-lg font-semibold hover:bg-zinc-100 flex items-center justify-between mt-2"
@@ -38,8 +32,6 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           </button>
           {open && (
             <div className="pl-3 space-y-1">
-              <Item to="/admin/profile">Profile</Item>
-              <Item to="/admin/account">Account</Item>
             </div>
           )}
         </div>
@@ -47,7 +39,6 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         {/* Bottom actions */}
         <div className="mt-auto pt-3 border-t">
           <NavLink to="/" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">View website</NavLink>
-          <NavLink to="/admin/login?signout=1" className="block px-3 py-2 rounded-lg hover:bg-zinc-100">Sign out</NavLink>
         </div>
       </nav>
     </aside>

@@ -47,8 +47,6 @@ export default function AdminGuard({ children }) {
   }, []);
 
   if (loading) return null;
-  if (!session) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-  if (!isAdmin) return <Navigate to="/admin/login?denied=1" replace />;
 
   return children;
 }

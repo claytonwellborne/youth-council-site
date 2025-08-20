@@ -7,10 +7,7 @@ import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import About from './pages/About'
-import Chapters from './pages/Chapters'
-import Apply from './pages/Apply'
 import Ambassador from './pages/Ambassador'
-import Contact from './pages/Contact'
 import Press from './pages/press/Press'
 import PressPost from './pages/press/PressPost'
 
@@ -30,13 +27,12 @@ function App() {
   return (
     <HashRouter>
   <Routes>
-    <!-- Public site -->
+    {/* Public site */}
     <Route path="/" element={<Home />} />
     <Route path="/about" element={<About />} />
     <Route path="/ambassador" element={<Ambassador />} />
     <Route path="/press" element={<Press />} />
     <Route path="/press/:slug" element={<PressPost />} />
-    <!-- (removed) <Route path="/contact" element={<Contact />} /> -->
 
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
