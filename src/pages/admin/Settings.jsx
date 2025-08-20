@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { useAdmin } from "../../components/admin/AdminContext";
 
 export default function Settings(){
   const { session } = useAdmin();
@@ -37,7 +36,6 @@ export default function Settings(){
   const resetPw = async ()=>{
     const email = me.email || (await supabase.from('profiles').select('email').eq('id', uid).maybeSingle()).data?.email;
     if (!email) return alert('No email on file.');
-    await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/#/admin/login` });
     alert('Password reset email sent.');
   };
 

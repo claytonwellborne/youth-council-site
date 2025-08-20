@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { useAdmin } from "../../components/admin/AdminContext";
 
 const ROLES_STAFF = [
   "chief_of_staff",
@@ -113,7 +112,6 @@ export default function Executive() {
   };
 
   const demote = async (email) => {
-    // strip role/admin from profiles directly
     await supabase
       .from("profiles")
       .update({ role: null, is_admin: false })
@@ -125,7 +123,6 @@ export default function Executive() {
     // Sends them a sign-in link to finish account setup
     await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/#/admin/login` },
     });
     alert("Magic sign-in link sent.");
   };
@@ -215,7 +212,6 @@ export default function Executive() {
             </div>
             <p className="text-xs text-gray-500">
               Tip: saving adds to <code>staff_pending</code>. When they sign in
-              at <code>/#/admin/login</code>, their role is auto-applied.
             </p>
           </form>
         </div>

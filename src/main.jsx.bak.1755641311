@@ -16,17 +16,6 @@ import PressPost from './pages/press/PressPost'
 
 /** Admin UI */
 import AdminGuard from '@/components/AdminGuard'
-import AdminLayout from '@/components/admin/AdminLayout'
-import Login from '@/pages/admin/Login'
-import Overview from '@/pages/admin/Overview'
-import Directory from '@/pages/admin/Directory'
-import Resources from '@/pages/admin/Resources'
-import Applications from '@/pages/admin/Applications'
-import Executive from '@/pages/admin/Executive'
-import ProfileSettings from '@/pages/admin/ProfileSettings'
-import AccountSettings from '@/pages/admin/AccountSettings'
-import PressHub from './pages/admin/press/PressHub'
-import PressEditor from './pages/admin/press/PressEditor'
 
 /** Public shell to keep Navbar off admin pages */
 function PublicShell() {
@@ -55,11 +44,9 @@ function App() {
         </Route>
 
         {/* Admin auth (standalone) */}
-        <Route path="/admin/login" element={<Login />} />
 
         {/* Admin app (no Navbar) */}
         <Route
-          path="/admin"
           element={
             <AdminGuard>
               <AdminLayout />

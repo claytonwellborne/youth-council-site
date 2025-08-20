@@ -49,7 +49,6 @@ export default function Dashboard() {
     general:'bg-gray-100 text-gray-800'
   }[c] || 'bg-gray-100 text-gray-800');
 
-  const signOut = async () => { await supabase.auth.signOut(); window.location.hash = '#/admin/login?signout=1'; };
 
   if (isLoading) {
     return (

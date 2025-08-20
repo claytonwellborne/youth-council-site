@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
-const REDIRECT = "/#/admin";
 
 function useHashParams() {
   return useMemo(() => new URLSearchParams((window.location.hash.split('?')[1] || '')), []);
@@ -16,7 +15,6 @@ export default function Login() {
 
   useEffect(() => {
     (async () => {
-      if (signout) { await supabase.auth.signOut(); history.replaceState(null, '', '#/admin/login'); }
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
       const { data } = await supabase.from('profiles').select('is_admin').eq('id', session.user.id).maybeSingle();

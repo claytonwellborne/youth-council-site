@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-import { useAdmin } from "../../components/admin/AdminContext";
-import RichEditor from "../../components/admin/RichEditor";
 
 export default function Overview(){
   const { session, profile } = useAdmin();
@@ -33,9 +31,6 @@ export default function Overview(){
   return (
     <div className="space-y-6">
       <div className="grid sm:grid-cols-3 gap-4">
-        <Stat label="Directory" to="/admin/directory" />
-        <Stat label="Applications" to="/admin/applications" />
-        <Stat label="Resources" to="/admin/resources" />
       </div>
 
       {canPost && (

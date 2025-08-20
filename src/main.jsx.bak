@@ -17,13 +17,6 @@ import PressPost from './pages/press/PressPost'
 
 // Admin
 import AdminGuard from '@/components/AdminGuard'
-import AdminLayout from '@/components/admin/AdminLayout'
-import Login from '@/pages/admin/Login'
-import Dashboard from '@/pages/admin/Dashboard'
-import Applications from '@/pages/admin/Applications'
-import Executive from '@/pages/admin/Executive'
-import PressHub from './pages/admin/press/PressHub'
-import PressEditor from './pages/admin/press/PressEditor'
 
 function App() {
   return (
@@ -41,10 +34,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
 
         {/* Admin auth (standalone) */}
-        <Route path="/admin/login" element={<Login />} />
 
         {/* Admin app (sidebar layout with nested children) */}
-        <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
           <Route index element={<Dashboard />} />
           <Route path="applications" element={<Applications />} />
           <Route path="executive" element={<Executive />} />
