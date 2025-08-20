@@ -222,7 +222,6 @@ export default function Executive() {
 
         {/* Ambassador */}
         <div className="border rounded-xl p-4 bg-white">
-          <h3 className="font-semibold mb-3">Add Ambassador</h3>
           <form onSubmit={saveAmb} className="space-y-3">
             <input
               required
@@ -263,7 +262,6 @@ export default function Executive() {
       {/* Pending + Team */}
       <section className="grid lg:grid-cols-2 gap-6">
         <div className="border rounded-xl p-4 bg-white">
-          <h3 className="font-semibold mb-3">Pending Assignments</h3>
           <div className="space-y-2">
             {(pending || []).length ? (
               pending.map((p) => (

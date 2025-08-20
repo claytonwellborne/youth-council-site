@@ -41,50 +41,33 @@ function PublicShell() {
 function App() {
   return (
     <HashRouter>
-      <Routes>
-        {/* Public site (Navbar visible) */}
-        <Route element={<PublicShell />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/chapters" element={<Chapters />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/ambassador" element={<Ambassador />} />
-          <Route path="/press" element={<Press />} />
-          <Route path="/press/:slug" element={<PressPost />} />
-          <Route path="/contact" element={<Contact />} />
-        </Route>
+  <Routes>
+    <!-- Public site -->
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/ambassador" element={<Ambassador />} />
+    <Route path="/press" element={<Press />} />
+    <Route path="/press/:slug" element={<PressPost />} />
+    <!-- (removed) <Route path="/contact" element={<Contact />} /> -->
 
-        {/* Admin auth (standalone) */}
-        <Route path="/admin/login" element={<Login />} />
+    <!-- Admin auth -->
+    <Route path="/admin/login" element={<Login />} />
 
-        {/* Admin app (no Navbar) */}
-        <Route
-          path="/admin"
-          element={
-            <AdminGuard>
-              <AdminLayout />
-            </AdminGuard>
-          }
-        >
-          {/* Default landing = Overview (your UI) */}
-          <Route index element={<Overview />} />
-          <Route path="profile" element={<ProfileSettings />} /><Route path="account" element={<AccountSettings />} />
-{/* Admin sections */}
-          <Route path="directory" element={<Directory />} />
-          <Route path="resources" element={<Resources />} />
-          <Route path="applications" element={<Applications />} />
-          <Route path="executive" element={<Executive />} />
+    <!-- Admin app (sidebar layout, children rendered via <Outlet/>) -->
+    <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
+      <Route index element={<Overview />} />
+      <Route path="directory" element={<Directory />} />
+      <Route path="applications" element={<Applications />} />
+      <!-- removed: resources, executive sub-features will be trimmed below -->
+      <!-- removed: press & press/create -->
+      <Route path="profile" element={<ProfileSettings />} />
+      <Route path="account" element={<AccountSettings />} />
+    </Route>
 
-          {/* Press — hub is the main page; create/edit are explicit */}
-          <Route path="press" element={<PressHub />} />
-          <Route path="press/create" element={<PressEditor />} />
-          <Route path="press/edit/:id" element={<PressEditor />} />
-        </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </HashRouter>
+    <!-- Fallback -->
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+</HashRouter>
   )
 }
 
